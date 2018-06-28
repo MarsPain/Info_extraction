@@ -1,5 +1,6 @@
 import html2text
 import os
+import re
 
 dirname_zengjianchi = "data/round1_train_20180518/增减持/html"
 dirname_dingzeng = "data/round1_train_20180518/定增/html"
@@ -17,13 +18,20 @@ def read_data(dirname, dirname_txt):
         filename = os.path.join(dirname, filename)
         with open(filename, "r", encoding="utf-8") as f:
             f = f.read()
-            s = h2t.handle(f)
-            s = s.replace(" ", ""); s = s.replace("\n", "")
-            while count<1:
-                print(s)
-                count += 1
-                with open(filename_txt, "w", encoding="utf-8") as f_txt:
-                    f_txt.write(s)
+            s = h2t.handle(f)   #读取为txt格式的string
+            s = s.replace(" ", ""); s = s.replace("\n", "") #去除空格和换行符
+            #对日期进行归一化处理
+            pattern = re.compile(r"\d{4}"+"年"+r"\d{1,2}"+"月"+r"\d{1,2}"+"日")
+            def date_change(matchobj): #对匹配到的日期进行修改的函数
+                matchobj = re.sub("年|月", "-", matchobj[0])
+                matchobj = re.sub("日", "", matchobj)
+                return matchobj
+            s = re.sub(pattern, date_change, s)
+            # print(filename,s)
+            count += 1
+            if count>100: break
+            with open(filename_txt, "w", encoding="utf-8") as f_txt:
+                f_txt.write(s)
 
 if __name__ == "__main__":
     read_data(dirname_zengjianchi, dirname_txt_zengjianchi)
