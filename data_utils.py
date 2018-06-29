@@ -14,15 +14,19 @@ def read_data(dirname, dirname_txt):
     h2t.ignore_links = True #表示忽略html页面中的链接
     count = 0
     for filename in os.listdir(dirname):
-        filename_txt = os.path.join(dirname_txt, filename[:-5]+".txt")
+        announce_id = filename[:-5]
+        # print("announce_id:", announce_id)
         filename = os.path.join(dirname, filename)
+        filename_txt = os.path.join(dirname_txt, announce_id+".txt")
         with open(filename, "r", encoding="utf-8") as f:
             f = f.read()
             s = h2t.handle(f)   #读取为txt格式的string
             s = s.replace(" ", ""); s = s.replace("\n", "") #去除空格和换行符
             s = unit_norm(s)    #对日期和比例等单位进行归一化处理
+            s = announce_id + s
+            # print(s)
             count += 1
-            if count>100: break
+            # if count>10: break
             with open(filename_txt, "w", encoding="utf-8") as f_txt:
                 f_txt.write(s)
 
