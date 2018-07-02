@@ -11,6 +11,8 @@ dirname_txt_hetong = "data/round1_train_20180518/重大合同/txt"
 dirname_txt2_zengjianchi = "data/round1_train_20180518/增减持/txt2"
 dirname_txt2_dingzeng = "data/round1_train_20180518/定增/txt2"
 dirname_txt2_hetong = "data/round1_train_20180518/重大合同/txt2"
+filename_ner = "data/ner_predict.utf8"
+filename_result_zengjianchi = "data/result_zengjianchi"
 
 def read_data(dirname, dirname_txt):
     h2t = html2text.HTML2Text() #初始化html2text工具
@@ -77,7 +79,58 @@ def unit_norm(s):
     s = re.sub(pattern, replace, s)
     return s
 
+def output_data(filename_ner, filename_result_zengjianchi):
+    result = ""
+    with open(filename_ner, "r", encoding="utf-8") as f:
+        flag = True
+        temp_result = ["\t" for i in range(8)]   #用于保存一行结构化的实体
+        entity = "" #用于保存一个实体
+        for line in f:
+            # print(line)
+            char_tag_predict = line.split()
+            # print(char_tag_predict)
+            # print(len(char_tag_predict))
+            if len(char_tag_predict) != 3:
+                continue
+            if char_tag_predict[-1] == "O":
+                # print(char_tag_predict[0])
+                continue
+            else:
+                predict = char_tag_predict[-1]
+                char = char_tag_predict[0]  #被标注预测的字符
+                predict_loc = predict[0]    #被标注预测的在实体中的位置（B、I、O等）
+                predict_type = predict[-1]  #被标注预测的在实体类型（0-7，标注还是得从0而不是1开始，方便输出）
+                # print(type(predict_type))
+                # print("char:", char, "predict_loc:", predict_loc, "predict_type:", predict_type)
+                if predict_loc == "B" or predict_loc == "I":
+                    entity += char
+                elif predict_loc == "E":
+                    entity += char
+                    #如果是新的公告id实体，则说明属于新的公告文本，将上一个temp_result加入result并换行，
+                    # 然后重新初始化temp_result并用entity对公告id赋值。
+                    if int(predict_type) == 0:
+                        result = result + "\t".join(temp_result) + "\n"
+                        temp_result = ["\t" for i in range(8)]
+                        temp_result[0] = entity
+                        entity = ""
+                    #如果是当前公告中的一条结构化信息，则只要对该行数据的temp_result赋值即可
+                    elif temp_result[int(predict_type)-1] == "\t":
+                        temp_result[int(predict_type)-1] = entity
+                        entity = ""
+                    #该实体依然在当前的公告文本中，但是属于另一条结构化信息，所以先从当前temp_result
+                    # 中取出公告id，然后将temp_result加入result中，再换行，
+                    # 重新初始化temp_result，并对公告id和当前的检测到的实体entity赋值
+                    else:
+                        announce_id = temp_result[0]
+                        result = result + "\t".join(temp_result) + "\n"
+                        temp_result = ["\t" for i in range(8)]
+                        temp_result[0] = announce_id
+                        temp_result[int(predict_type)-1] = entity
+                        entity = ""
+    with open(filename_result_zengjianchi, "w", encoding="utf-8") as f:
+        f.write(result)
 
 if __name__ == "__main__":
-    read_data(dirname_zengjianchi, dirname_txt_zengjianchi)
+    # read_data(dirname_zengjianchi, dirname_txt_zengjianchi)
     # process_data(dirname_txt2_zengjianchi)
+    output_data(filename_ner, filename_result_zengjianchi)

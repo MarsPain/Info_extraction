@@ -63,14 +63,23 @@ import re
 # s = re.sub(pattern4, test4, s)
 # print(s)
 
-pattern5 = re.compile(r"(\d+\.?\d+%)")
-s = "我50|50%"
-def test5(matchobj):
-    print("matchobj", matchobj[0])
-    value = 0.01*float(matchobj[0][:-1])
-    print(value)
-    matchobj = re.sub(matchobj[0], str(value), matchobj[0])
-    return matchobj
-s = re.sub(pattern5, test5, s)
+# pattern5 = re.compile(r"(\d+\.?\d+%)")
+# s = "我50|50%"
+# def test5(matchobj):
+#     print("matchobj", matchobj[0])
+#     value = 0.01*float(matchobj[0][:-1])
+#     print(value)
+#     matchobj = re.sub(matchobj[0], str(value), matchobj[0])
+#     return matchobj
+# s = re.sub(pattern5, test5, s)
+# print(s)
+
+
+s = ["\t" for i in range(4)]
 print(s)
+s[0] = "a"; s[2] = "b"
+if s[3] == "\t":
+    print("Yes!!!!")
+print("\t".join(s))
+
 
