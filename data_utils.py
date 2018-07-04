@@ -31,6 +31,7 @@ def read_data(dirname, dirname_txt):
             f = f.read()
             s = h2t.handle(f)   #读取为txt格式的string
             s = s.replace(" ", ""); s = s.replace("\n", "") #去除空格和换行符
+            s = re.sub(r"(\[image\].+\))", " ", s)  #去除图像数据的影响
             s = unit_norm(s)    #对日期和比例等单位进行归一化处理
             s = "公告ID" + announce_id + s #将公告id(announce_id)加入每个相应文件的头部
             # print(s)
@@ -95,7 +96,7 @@ def unit_norm(s):
 
     pattern3 = re.compile(r"(\d{1,3}.\d{3}.\d{3}.\d{3})|(\d{1,3}.\d{3}.\d{3})|(\d{1,3}.\d{3})|")
     def replace3(matchobj):
-        string = matchobj[0].replace(".", "")
+        string = matchobj[0].replace(",", "")
         return string
     s = re.sub(pattern3, replace3, s)
 
