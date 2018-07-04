@@ -63,23 +63,38 @@ import re
 # s = re.sub(pattern4, test4, s)
 # print(s)
 
-# pattern5 = re.compile(r"(\d+\.?\d+%)")
-# s = "我50|50%"
-# def test5(matchobj):
-#     print("matchobj", matchobj[0])
-#     value = 0.01*float(matchobj[0][:-1])
-#     print(value)
-#     matchobj = re.sub(matchobj[0], str(value), matchobj[0])
-#     return matchobj
-# s = re.sub(pattern5, test5, s)
-# print(s)
-
-
-s = ["\t" for i in range(4)]
+pattern5 = re.compile(r"(\d+\.?\d+%)")
+s = "我50|50%|0.345%"
+def test5(matchobj):
+    print("matchobj", matchobj[0])
+    value = 0.01*float(matchobj[0][:-1])
+    print(value)
+    matchobj = re.sub(matchobj[0], str(value), matchobj[0])
+    return matchobj
+s = re.sub(pattern5, test5, s)
 print(s)
-s[0] = "a"; s[2] = "b"
-if s[3] == "\t":
-    print("Yes!!!!")
-print("\t".join(s))
 
 
+# s = ["\t" for i in range(4)]
+# print(s)
+# s[0] = "a"; s[2] = "b"
+# if s[3] == "\t":
+#     print("Yes!!!!")
+# print("\t".join(s))
+
+s = "67.236.244"
+pattern = re.compile(r"(\d{1,3}\.\d{3}\.\d{3}\.\d{3})|(\d{1,3}\.\d{3}\.\d{3})|(\d{1,3}\.\d{3})")
+def test(matchobj):
+    string = matchobj[0].replace(".", "")
+    return string
+s = re.sub(pattern, test, s)
+print(s)
+
+# s = "400万"
+# pattern4 = re.compile(r"(\d+万)")
+# def replace4(matchobj):
+#     num = matchobj[0][:-1]
+#     new_num = int(num) * 10000
+#     return str(new_num)
+# s = re.sub(pattern4, replace4, s)
+# print(s)

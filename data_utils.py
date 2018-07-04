@@ -68,7 +68,7 @@ def process_data(dirname):
                     test.write(announce_txt)
 
 def unit_norm(s):
-    pattern1 = re.compile(r"(\d{1,2}月|\d{1,2}日)")
+    pattern1 = re.compile(r"(\d{1,2}月)|(\d{1,2}日)")
     def replace1(matchobj):
         if len(matchobj[0]) == 2:
             # print(type(matchobj[0]), matchobj[0])
@@ -78,6 +78,7 @@ def unit_norm(s):
         else:
             return matchobj[0]
     s = re.sub(pattern1, replace1, s)
+
     # s = "他的生日是2016年12月12日，他在2017年8月7日至9月10日去大学了，有50%的学生"  #测试pattern2
     pattern2 = re.compile(r"(\d{4}年\d{1,2}月\d{1,2}日至\d{1,2}月\d{1,2}日)|(\d{4}年\d{1,2}月\d{1,2}日)|(\d+\.?\d+%)")
     def replace2(matchobj):
@@ -91,7 +92,22 @@ def unit_norm(s):
             matchobj = re.sub("日", "", matchobj)
         return matchobj
     s = re.sub(pattern2, replace2, s)
+
+    pattern3 = re.compile(r"(\d{1,3}.\d{3}.\d{3}.\d{3})|(\d{1,3}.\d{3}.\d{3})|(\d{1,3}.\d{3})|")
+    def replace3(matchobj):
+        string = matchobj[0].replace(".", "")
+        return string
+    s = re.sub(pattern3, replace3, s)
+
+    pattern4 = re.compile(r"(\d+万)")
+    def replace4(matchobj):
+        num = matchobj[0][:-1]
+        new_num = int(num) * 10000
+        return str(new_num)
+    s = re.sub(pattern4, replace4, s)
+
     return s
+
 
 def output_data(filename_ner, filename_result_zengjianchi):
     result = ""
