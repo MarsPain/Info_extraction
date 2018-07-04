@@ -11,8 +11,12 @@ dirname_txt_hetong = "data/round1_train_20180518/重大合同/txt"
 dirname_txt2_zengjianchi = "data/round1_train_20180518/增减持/txt2"
 dirname_txt2_dingzeng = "data/round1_train_20180518/定增/txt2"
 dirname_txt2_hetong = "data/round1_train_20180518/重大合同/txt2"
-filename_ner = "data/ner_predict.utf8"
-filename_result_zengjianchi = "data/result_zengjianchi"
+filename_predict_zengjianchi = "data/predict_zengjianchi.utf8"
+filename_predict_dingzeng = "data/predict_dingzeng.utf8"
+filename_predict_hetong = "data/predict_hetong.utf8"
+filename_result_zengjianchi = "data/zengjianchi.txt"
+filename_result_dingzeng = "data/dingzeng.txt"
+filename_result_hetong = "data/hetong.txt"
 
 def read_data(dirname, dirname_txt):
     h2t = html2text.HTML2Text() #初始化html2text工具
@@ -30,8 +34,8 @@ def read_data(dirname, dirname_txt):
             s = unit_norm(s)    #对日期和比例等单位进行归一化处理
             s = "公告ID" + announce_id + s #将公告id(announce_id)加入每个相应文件的头部
             # print(s)
-            count += 1
-            # if count>10: break
+            # count += 1
+            # if count>50: break
             with open(filename_txt, "w", encoding="utf-8") as f_txt:
                 f_txt.write(s)
 
@@ -64,9 +68,19 @@ def process_data(dirname):
                     test.write(announce_txt)
 
 def unit_norm(s):
-    # s = "他的生日是2016年12月12日，他在2017年8月7日至9月10日去大学了，有50%的学生"  #测试pattern
-    pattern = re.compile(r"(\d{4}年\d{1,2}月\d{1,2}日至\d{1,2}月\d{1,2}日)|(\d{4}年\d{1,2}月\d{1,2}日)|(\d+\.?\d+%)")
-    def replace(matchobj):
+    pattern1 = re.compile(r"(\d{1,2}月|\d{1,2}日)")
+    def replace1(matchobj):
+        if len(matchobj[0]) == 2:
+            # print(type(matchobj[0]), matchobj[0])
+            matchobj = "0" + matchobj[0]
+            # print(matchobj)
+            return matchobj
+        else:
+            return matchobj[0]
+    s = re.sub(pattern1, replace1, s)
+    # s = "他的生日是2016年12月12日，他在2017年8月7日至9月10日去大学了，有50%的学生"  #测试pattern2
+    pattern2 = re.compile(r"(\d{4}年\d{1,2}月\d{1,2}日至\d{1,2}月\d{1,2}日)|(\d{4}年\d{1,2}月\d{1,2}日)|(\d+\.?\d+%)")
+    def replace2(matchobj):
         if matchobj[0][-1] == "%":
             value = 0.01*float(matchobj[0][:-1])
             matchobj = re.sub(matchobj[0], str(value), matchobj[0])
@@ -76,7 +90,7 @@ def unit_norm(s):
             matchobj = re.sub("年|月", "-", matchobj)
             matchobj = re.sub("日", "", matchobj)
         return matchobj
-    s = re.sub(pattern, replace, s)
+    s = re.sub(pattern2, replace2, s)
     return s
 
 def output_data(filename_ner, filename_result_zengjianchi):
@@ -131,6 +145,6 @@ def output_data(filename_ner, filename_result_zengjianchi):
         f.write(result)
 
 if __name__ == "__main__":
-    # read_data(dirname_zengjianchi, dirname_txt_zengjianchi)
+    read_data(dirname_dingzeng, dirname_txt_dingzeng)
     # process_data(dirname_txt2_zengjianchi)
-    output_data(filename_ner, filename_result_zengjianchi)
+    # output_data(filename_ner, filename_result_zengjianchi)
