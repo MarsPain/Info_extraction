@@ -139,7 +139,7 @@ def output_data(filename_ner, filename_result_zengjianchi):
                     entity += char
                     #如果是新的公告id实体，则说明属于新的公告文本，将上一个temp_result加入result并换行，
                     # 然后重新初始化temp_result并用entity对公告id赋值。
-                    if int(predict_type) == 0:
+                    if int(predict_type) == 1:
                         result = result + "\t".join(temp_result) + "\n"
                         temp_result = ["\t" for i in range(8)]
                         temp_result[0] = entity
@@ -151,17 +151,19 @@ def output_data(filename_ner, filename_result_zengjianchi):
                     #该实体依然在当前的公告文本中，但是属于另一条结构化信息，所以先从当前temp_result
                     # 中取出公告id，然后将temp_result加入result中，再换行，
                     # 重新初始化temp_result，并对公告id和当前的检测到的实体entity赋值
-                    else:
+                    elif int(predict_type) == 2 and temp_result[1] != "\t":
                         announce_id = temp_result[0]
                         result = result + "\t".join(temp_result) + "\n"
                         temp_result = ["\t" for i in range(8)]
                         temp_result[0] = announce_id
                         temp_result[int(predict_type)-1] = entity
                         entity = ""
+                    else:
+                        entity = ""
     with open(filename_result_zengjianchi, "w", encoding="utf-8") as f:
         f.write(result)
 
 if __name__ == "__main__":
-    read_data(dirname_dingzeng, dirname_txt_dingzeng)
+    # read_data(dirname_dingzeng, dirname_txt_dingzeng)
     # process_data(dirname_txt2_zengjianchi)
-    # output_data(filename_ner, filename_result_zengjianchi)
+    output_data(filename_predict_zengjianchi, filename_result_zengjianchi)
