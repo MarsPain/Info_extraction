@@ -103,11 +103,38 @@ import re
 # s = re.sub(r"(\[image\].*\))", " ", s)
 # print(s)
 
-s = "额为137,630,695元，币共计16928.797540000元（大写：人民币,51，452元"
-pattern = re.compile(r"(\d+.\d+)|(\d{1,}.\d{3}.\d{3})")
-def test(matchobj):
-    string = matchobj[0].replace("，|,|.", "")
-    print(string)
-    return string
-s = re.sub(pattern, test, s)
-print(s)
+# s = "额为137,630,695元，币共计16928.797540000元（大写：人民币,51，452元"
+# pattern = re.compile(r"(\d+.\d+)|(\d{1,}.\d{3}.\d{3})")
+# def test(matchobj):
+#     string = matchobj[0].replace("，|,|.", "")
+#     print(string)
+#     return string
+# s = re.sub(pattern, test, s)
+# print(s)
+
+# s = "dad2017年6月7日-8月8日大萨达撒"
+# pattern2 = re.compile(r"(\d{4}年\d{1,2}月\d{1,2}日-\d{1,2}月\d{1,2}日)|(\d{4}年\d{1,2}月\d{1,2}日至\d{1,2}月\d{1,2}日)|(\d{4}年\d{1,2}月\d{1,2}日)|(\d+\.?\d+%)")
+# def replace2(matchobj):
+#     if matchobj[0][-1] == "%":
+#         value = 0.01*float(matchobj[0][:-1])
+#         matchobj = re.sub(matchobj[0], str(value), matchobj[0])
+#     else:
+#         year = matchobj[0][:4]
+#         matchobj = re.sub("至", "至"+year+"年", matchobj[0])
+#         matchobj = re.sub("-", "至"+year+"年", matchobj)
+#         matchobj = re.sub("年|月", "-", matchobj)
+#         matchobj = re.sub("日", "", matchobj)
+#     return matchobj
+# s = re.sub(pattern2, replace2, s)
+# print(s)
+
+l1 = ["1sad", "2312", "\t", "sda"]
+l2 = ["1sad", "\t", "\t", "sda"]
+count1, count2 =0, 0
+for i in l1:
+    if i != "\t":
+        count1 += 1
+for i in l2:
+    if i != "\t":
+        count2 += 1
+print(count1, count2)

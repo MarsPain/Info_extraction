@@ -113,10 +113,11 @@ def evaluate(sess, model, name, data, id_to_tag, logger):
 
 def train(model_name):
     # load data sets
+    data_path = "data/round1_train_20180518"
     #加载数据集的sentence，并处理成列表，每个sentence中的词及相应的标签也处理成列表
-    train_file = os.path.join("data/round1_train_20180518", model_name+"/announce.train")
-    dev_file = os.path.join("data/round1_train_20180518", model_name+"/announce.dev")
-    test_file = os.path.join("data/round1_train_20180518", model_name+"/announce.test")
+    train_file = os.path.join(data_path, model_name+"/announce.train")
+    dev_file = os.path.join(data_path, model_name+"/announce.dev")
+    test_file = os.path.join(data_path, model_name+"/announce.test")
     train_sentences = load_sentences(train_file, FLAGS.lower, FLAGS.zeros)
     dev_sentences = load_sentences(dev_file, FLAGS.lower, FLAGS.zeros)
     test_sentences = load_sentences(test_file, FLAGS.lower, FLAGS.zeros)
@@ -129,7 +130,7 @@ def train(model_name):
 
     # create maps if not exist
     #os.path.isfile查找是否存在该文件
-    map_file = "data/" + model_name + "_maps.pkl"
+    map_file = data_path + "/" + model_name + "/maps.pkl"
     if not os.path.isfile(map_file):
         # create dictionary for word
         #使用预训练的词向量
@@ -196,7 +197,7 @@ def train(model_name):
     tf_config = tf.ConfigProto()
     # tf_config.gpu_options.allow_growth = True
     steps_per_epoch = train_manager.len_data
-    ckpt_path = "model/" + model_name + "_ckpt"
+    ckpt_path = "model_ckpt/" + model_name + "_ckpt"
     with tf.Session(config=tf_config) as sess:
         model = create_model(sess, Model, ckpt_path, load_word2vec, config, id_to_char, logger)
         logger.info("start training")
@@ -212,7 +213,7 @@ def train(model_name):
                         iteration, step%steps_per_epoch, steps_per_epoch, np.mean(loss)))
                     loss = []
 
-            best = evaluate(sess, model, "dev", dev_manager, id_to_tag, logger)
+            best = evaluate(sess, model, "dev_"+model_name , dev_manager, id_to_tag, logger)
             if best:
                 save_model(sess, model, ckpt_path, logger)
             # evaluate(sess, model, "test", test_manager, id_to_tag, logger)
@@ -224,7 +225,8 @@ def evaluate_line(model_name):
     # limit GPU memory
     tf_config = tf.ConfigProto()
     tf_config.gpu_options.allow_growth = True
-    map_file = "data/" + model_name + "_maps.pkl"
+    data_path = "data/round1_train_20180518"
+    map_file = data_path + "/" + model_name + "/maps.pkl"
     with open(map_file, "rb") as f:
         char_to_id, id_to_char, tag_to_id, id_to_tag = pickle.load(f)
     test_file = os.path.join("data/round1_train_20180518", model_name+"/announce.test") #本地测试用

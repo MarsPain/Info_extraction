@@ -70,3 +70,19 @@
 2018-07-05 14:41:49,701 - train.log - INFO -                 3: precision:  77.09%; recall:  71.07%; FB1:  73.96  1039
 
 2018-07-05 14:41:49,791 - train.log - INFO - new best test f1 score:74.270
+2018-07-05 17:52:59,973 - train.log - INFO - Created model with fresh parameters.
+2018-07-05 17:53:01,458 - train.log - INFO - Load pre-trained embedding.
+2018-07-05 17:53:01,458 - train.log - INFO - evaluate:test
+2018-07-05 17:53:02,413 - train.log - INFO - processed 8668 tokens with 1726 phrases; found: 8280 phrases; correct: 15.
+
+2018-07-05 17:53:02,413 - train.log - INFO - accuracy:   3.67%; precision:   0.18%; recall:   0.87%; FB1:   0.30
+
+2018-07-05 17:53:02,413 - train.log - INFO -                 0: precision:   0.03%; recall:   0.67%; FB1:   0.06  6217
+
+2018-07-05 17:53:02,413 - train.log - INFO -                 1: precision:   0.00%; recall:   0.00%; FB1:   0.00  326
+
+2018-07-05 17:53:02,413 - train.log - INFO -                 2: precision:   0.00%; recall:   0.00%; FB1:   0.00  309
+
+2018-07-05 17:53:02,413 - train.log - INFO -                 3: precision:   0.91%; recall:   1.15%; FB1:   1.02  1428
+
+2018-07-05 17:53:02,511 - train.log - INFO - new best test f1 score:0.300

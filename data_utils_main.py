@@ -18,10 +18,12 @@ import re
 # filename_result_dingzeng = "data/dingzeng.txt"
 # filename_result_hetong = "data/hetong.txt"
 
+data_path = "data/round1_train_20180518"
+
 # def read_data(dirname, dirname_txt):
 def read_data(model_name):
-    dirname = os.path.join("data/round1_train_20180518", model_name+"/html")
-    dirname_txt = os.path.join("data/round1_train_20180518", model_name+"/txt")
+    dirname = os.path.join(data_path, model_name+"/html")
+    dirname_txt = os.path.join(data_path, model_name+"/txt")
     h2t = html2text.HTML2Text() #初始化html2text工具
     h2t.ignore_links = True #表示忽略html页面中的链接
     count = 0
@@ -37,17 +39,17 @@ def read_data(model_name):
             s = re.sub(r"(\[image\].+\))", " ", s)  #去除图像数据的影响
             s = unit_norm(s)    #对日期和比例等单位进行归一化处理
             s = "公告ID" + announce_id + s #将公告id(announce_id)加入每个相应文件的头部
-            print(s)
-            count += 1
-            if count>50: break
+            # print(s)
+            # count += 1
+            # if count>50: break
             with open(filename_txt, "w", encoding="utf-8") as f_txt:
                 f_txt.write(s)
 
 def process_data(model_name):
-    dirname = os.path.join("data/round1_train_20180518", model_name+"/txt2")
-    announce_train = os.path.join("data/round1_train_20180518", model_name+"/announce.train")
-    announce_dev = os.path.join("data/round1_train_20180518", model_name+"/announce.dev")
-    announce_test = os.path.join("data/round1_train_20180518", model_name+"/announce.test")
+    dirname = os.path.join(data_path, model_name+"/txt2")
+    announce_train = os.path.join(data_path, model_name+"/announce.train")
+    announce_dev = os.path.join(data_path, model_name+"/announce.dev")
+    announce_test = os.path.join(data_path, model_name+"/announce.test")
     all_filenames = os.listdir(dirname)
     # print(all_filenames)
     num_filenames = len(all_filenames)
@@ -67,7 +69,6 @@ def process_data(model_name):
             elif count==num_filenames:
                 with open(announce_dev, 'w', encoding="utf-8") as dev:
                     dev.write(announce_txt)
-            elif count==num_filenames:
                 with open(announce_test, 'w', encoding="utf-8") as test:
                     test.write(announce_txt)
 
@@ -84,7 +85,7 @@ def unit_norm(s):
     s = re.sub(pattern1, replace1, s)
 
     # s = "他的生日是2016年12月12日，他在2017年8月7日至9月10日去大学了，有50%的学生"  #测试pattern2
-    pattern2 = re.compile(r"(\d{4}年\d{1,2}月\d{1,2}日至\d{1,2}月\d{1,2}日)|(\d{4}年\d{1,2}月\d{1,2}日)|(\d+\.?\d+%)")   #继续完善正则表达式，然后进行标注，因为可能存在XXXX年XX月XX日-XX月XX日
+    pattern2 = re.compile(r"(\d{4}年\d{1,2}月\d{1,2}日-\d{1,2}月\d{1,2}日)|(\d{4}年\d{1,2}月\d{1,2}日至\d{1,2}月\d{1,2}日)|(\d{4}年\d{1,2}月\d{1,2}日)|(\d+\.?\d+%)")
     def replace2(matchobj):
         if matchobj[0][-1] == "%":
             value = 0.01*float(matchobj[0][:-1])
@@ -92,6 +93,7 @@ def unit_norm(s):
         else:
             year = matchobj[0][:4]
             matchobj = re.sub("至", "至"+year+"年", matchobj[0])
+            matchobj = re.sub("-", "至"+year+"年", matchobj)
             matchobj = re.sub("年|月", "-", matchobj)
             matchobj = re.sub("日", "", matchobj)
         return matchobj
@@ -121,6 +123,7 @@ def output_data(model_name):
     with open(filename_predict, "r", encoding="utf-8") as f:
         flag = True
         temp_result = ["\t" for i in range(8)]   #用于保存一行结构化的实体
+        temp2_result = []    #保存临时重复出现的实体
         entity = "" #用于保存一个实体
         for line in f:
             # print(line)
@@ -157,6 +160,36 @@ def output_data(model_name):
                     #该实体依然在当前的公告文本中，但是属于另一条结构化信息，所以先从当前temp_result
                     # 中取出公告id，然后将temp_result加入result中，再换行，
                     # 重新初始化temp_result，并对公告id和当前的检测到的实体entity赋值
+                    # 这个地方还是没处理好，很多不应该存在的多余的结构化数据，而且导致一些实体数据被分散在多余的结构化数据中。
+                    # 有两个思路，第一个思路是在遍历到下一个公告之前，同一个公告的信息用嵌套列表存储，然后重复出现的实体依次往后放
+                    # 在下一个子列表中，然后添加实体的时候从最前面的列表开始检索相应位置是否是空着的，如果空着的就填入，最后把长度不够的子列表去除！
+                    # 更好的思路是用一个临时列表temp2_result保存重复的实体，不重复的实体先放在当前temp_result，当temp2_result中非空的元素长度与
+                    # temp_result相同时（根据规律，文本中出现的重复结构化数据多为列表表示，所以实体数量基本相等），
+                    # 则认为是属于同一个公告的结构化数据,temp_result添加到最终result中，temp2_result中的值转移到temp_result中，
+                    # 然后自身赋值为空数组
+                    # elif temp_result[int(predict_type)-1] == "\t":
+                    #     if temp2_result == []:  #如果出现了重复实体且temp2_result为空
+                    #         count1, count2 =0, 0
+                    #         announce_id = temp_result[0]
+                    #         temp2_result = ["\t" for i in range(8)]
+                    #         temp2_result[0] = announce_id
+                    #         temp2_result[int(predict_type)-1] = entity
+                    #         entity = ""
+                    #     else:
+                    #         if temp2_result[int(predict_type)-1] == "\t":
+                    #             temp2_result[int(predict_type)-1] = entity
+                    #         entity = ""  #如果出现的重复实体在临时列表中已经重复了，则忽略
+                    #     for e in temp_result:
+                    #         if e != "\t":
+                    #             count1 += 1
+                    #     for e in temp2_result:
+                    #         if e != "\t":
+                    #             count2 += 1
+                    #     if count1 == count2:    #如果实体数量相同了
+                    #         result = result + "\t".join(temp2_result) + "\n"
+                    #         temp2_result = []
+
+                    #下面的方法是简单粗暴地出现重复的公司名称时就认为是另一条结构化数据
                     elif int(predict_type) == 2 and temp_result[1] != "\t":
                         announce_id = temp_result[0]
                         result = result + "\t".join(temp_result) + "\n"
