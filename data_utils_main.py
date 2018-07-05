@@ -18,12 +18,12 @@ import re
 # filename_result_dingzeng = "data/dingzeng.txt"
 # filename_result_hetong = "data/hetong.txt"
 
-data_path = "data/round1_train_20180518"
+# data_path = "data/round1_train_20180518"
 
 # def read_data(dirname, dirname_txt):
-def read_data(model_name):
-    dirname = os.path.join(data_path, model_name+"/html")
-    dirname_txt = os.path.join(data_path, model_name+"/txt")
+def read_data(model_name, path_model_name):
+    dirname = os.path.join(path_model_name, "html")
+    dirname_txt = os.path.join(path_model_name, "txt")
     h2t = html2text.HTML2Text() #初始化html2text工具
     h2t.ignore_links = True #表示忽略html页面中的链接
     count = 0
@@ -45,11 +45,11 @@ def read_data(model_name):
             with open(filename_txt, "w", encoding="utf-8") as f_txt:
                 f_txt.write(s)
 
-def process_data(model_name):
-    dirname = os.path.join(data_path, model_name+"/txt2")
-    announce_train = os.path.join(data_path, model_name+"/announce.train")
-    announce_dev = os.path.join(data_path, model_name+"/announce.dev")
-    announce_test = os.path.join(data_path, model_name+"/announce.test")
+def process_data(model_name, path_model_name):
+    dirname = os.path.join(path_model_name, "txt2")
+    announce_train = os.path.join(path_model_name, "announce.train")
+    announce_dev = os.path.join(path_model_name, "announce.dev")
+    announce_test = os.path.join(path_model_name, "announce.test")
     all_filenames = os.listdir(dirname)
     # print(all_filenames)
     num_filenames = len(all_filenames)
@@ -119,7 +119,12 @@ def unit_norm(s):
 def output_data(model_name):
     filename_predict = os.path.join("result", model_name+"_predict.utf8")
     filename_result = os.path.join("result", model_name+".txt")
-    result = "公告id	股东全称	股东简称	变动截止日期	变动价格	变动数量	变动后持股数	变动后持股比例"
+    if model_name == "zengjianchi":
+        result = "公告id	股东全称	股东简称	变动截止日期	变动价格	变动数量	变动后持股数	变动后持股比例"
+    elif model_name == "hetong":
+        result = "公告id	甲方	乙方	项目名称	合同名称	合同金额上限	合同金额下限	联合体成员"
+    elif model_name == "dingzeng":
+        result = "公告id  增发对象    增发数量	增发金额	锁定期	认购方式"
     with open(filename_predict, "r", encoding="utf-8") as f:
         flag = True
         temp_result = ["\t" for i in range(8)]   #用于保存一行结构化的实体

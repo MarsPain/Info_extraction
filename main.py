@@ -32,7 +32,7 @@ flags.DEFINE_string("tag_schema",   "iobes",    "tagging schema iobes or iob")
 # configurations for training
 flags.DEFINE_float("clip",          5,          "Gradient clip")
 flags.DEFINE_float("dropout",       0.5,        "Dropout rate")
-flags.DEFINE_float("batch_size",    5,         "batch size")
+flags.DEFINE_float("batch_size",    8,         "batch size")
 flags.DEFINE_float("lr",            0.001,      "Initial learning rate")
 flags.DEFINE_string("optimizer",    "adam",     "Optimizer for training")
 flags.DEFINE_boolean("pre_emb",     True,       "Wither use pre-trained embedding")
@@ -111,13 +111,13 @@ def evaluate(sess, model, name, data, id_to_tag, logger):
         return f1 > best_test_f1
 
 
-def train(model_name):
+def train(model_name, path_model_name):
     # load data sets
-    data_path = "data/round1_train_20180518"
+    # data_path = "data/round1_train_20180518"
     #加载数据集的sentence，并处理成列表，每个sentence中的词及相应的标签也处理成列表
-    train_file = os.path.join(data_path, model_name+"/announce.train")
-    dev_file = os.path.join(data_path, model_name+"/announce.dev")
-    test_file = os.path.join(data_path, model_name+"/announce.test")
+    train_file = os.path.join(path_model_name, "announce.train")
+    dev_file = os.path.join(path_model_name, "announce.dev")
+    test_file = os.path.join(path_model_name, "announce.test")
     train_sentences = load_sentences(train_file, FLAGS.lower, FLAGS.zeros)
     dev_sentences = load_sentences(dev_file, FLAGS.lower, FLAGS.zeros)
     test_sentences = load_sentences(test_file, FLAGS.lower, FLAGS.zeros)
@@ -130,7 +130,7 @@ def train(model_name):
 
     # create maps if not exist
     #os.path.isfile查找是否存在该文件
-    map_file = data_path + "/" + model_name + "/maps.pkl"
+    map_file = path_model_name + "/maps.pkl"
     if not os.path.isfile(map_file):
         # create dictionary for word
         #使用预训练的词向量
@@ -219,21 +219,21 @@ def train(model_name):
             # evaluate(sess, model, "test", test_manager, id_to_tag, logger)
 
 
-def evaluate_line(model_name):
+def evaluate_line(model_name, path_model_name):
     config = load_config(FLAGS.config_file)
     logger = get_logger(FLAGS.log_file)
     # limit GPU memory
     tf_config = tf.ConfigProto()
     tf_config.gpu_options.allow_growth = True
-    data_path = "data/round1_train_20180518"
-    map_file = data_path + "/" + model_name + "/maps.pkl"
+    # data_path = "data/round1_train_20180518"
+    map_file = path_model_name + "/maps.pkl"
     with open(map_file, "rb") as f:
         char_to_id, id_to_char, tag_to_id, id_to_tag = pickle.load(f)
     test_file = os.path.join("data/round1_train_20180518", model_name+"/announce.test") #本地测试用
     test_sentences = load_sentences(test_file, FLAGS.lower, FLAGS.zeros)
     test_data = prepare_dataset(test_sentences, char_to_id, tag_to_id, FLAGS.lower)
     test_manager = BatchManager(test_data, 1)
-    ckpt_path = "model/" + model_name + "_ckpt"
+    ckpt_path = "model_ckpt/" + model_name + "_ckpt"
     with tf.Session(config=tf_config) as sess:
         model = create_model(sess, Model, ckpt_path, load_word2vec, config, id_to_char, logger)
 
@@ -263,12 +263,12 @@ def main(_):
     else:
         evaluate_line()
 
-def main_ner(is_train, model_name):
+def main_ner(is_train, model_name, path_model_name):
     if is_train:
         clean(FLAGS)
-        train(model_name)
+        train(model_name, path_model_name)
     else:
-        evaluate_line(model_name)
+        evaluate_line(model_name, path_model_name)
 
 
 if __name__ == "__main__":

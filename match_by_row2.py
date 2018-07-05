@@ -24,12 +24,12 @@ def check_duplicate(tag_list,start,word_len):
                 flag = 1
     return flag
 # if __name__ == '__main__':
-def match_by_row(model_name):
+def match_by_row(model_name, path_model_name):
     # txt_dir = 'dingzeng/'#'' 'hetong/'
     # train_dir = 'dingzeng/dingzeng.train'   #'zengjianchi.train' 'hetong/hetong.train'
-    data_path = "data/round1_train_20180518"
-    txt_dir = os.path.join(data_path, model_name+"/")
-    train_dir = os.path.join(data_path, model_name+"/"+model_name+".train")
+    # data_path = "data/round1_train_20180518"
+    txt_dir = os.path.join(path_model_name, "/")
+    train_dir = os.path.join(path_model_name, "/"+model_name+".train")
     df = pd.read_csv(train_dir, encoding='utf8', sep='\t', header=None)
     df = df.replace(np.nan, '')
     df = df.drop(2,axis=1)

@@ -128,13 +128,13 @@ import re
 # s = re.sub(pattern2, replace2, s)
 # print(s)
 
-l1 = ["1sad", "2312", "\t", "sda"]
-l2 = ["1sad", "\t", "\t", "sda"]
-count1, count2 =0, 0
-for i in l1:
-    if i != "\t":
-        count1 += 1
-for i in l2:
-    if i != "\t":
-        count2 += 1
-print(count1, count2)
+# l1 = ["1sad", "2312", "\t", "sda"]
+# l2 = ["1sad", "\t", "\t", "sda"]
+# count1, count2 =0, 0
+# for i in l1:
+#     if i != "\t":
+#         count1 += 1
+# for i in l2:
+#     if i != "\t":
+#         count2 += 1
+# print(count1, count2)

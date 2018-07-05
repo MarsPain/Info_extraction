@@ -1,10 +1,10 @@
 {
-    "num_chars": 1307,
+    "num_chars": 3442,
     "char_dim": 100,
-    "num_tags": 15,
+    "num_tags": 19,
     "seg_dim": 0,
     "lstm_dim": 100,
-    "batch_size": 5.0,
+    "batch_size": 8.0,
     "emb_file": "wiki_100.utf8",
     "clip": 5.0,
     "dropout_keep": 0.5,
