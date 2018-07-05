@@ -25,3 +25,48 @@
 2018-07-05 11:08:13,184 - train.log - INFO -                 3: precision:  66.07%; recall:  68.23%; FB1:  67.13  1164
 
 2018-07-05 11:08:13,287 - train.log - INFO - new best test f1 score:64.210
+2018-07-05 14:32:06,193 - train.log - INFO - Reading model parameters from model/test_ckpt\ner.ckpt
+2018-07-05 14:32:06,456 - train.log - INFO - evaluate:test
+2018-07-05 14:32:07,368 - train.log - INFO - processed 8668 tokens with 1726 phrases; found: 1694 phrases; correct: 1270.
+
+2018-07-05 14:32:07,368 - train.log - INFO - accuracy:  84.64%; precision:  74.97%; recall:  73.58%; FB1:  74.27
+
+2018-07-05 14:32:07,368 - train.log - INFO -                 0: precision:  76.28%; recall:  85.23%; FB1:  80.51  333
+
+2018-07-05 14:32:07,368 - train.log - INFO -                 1: precision:  52.53%; recall:  55.32%; FB1:  53.89  99
+
+2018-07-05 14:32:07,368 - train.log - INFO -                 2: precision:  73.09%; recall:  78.74%; FB1:  75.81  223
+
+2018-07-05 14:32:07,368 - train.log - INFO -                 3: precision:  77.09%; recall:  71.07%; FB1:  73.96  1039
+
+2018-07-05 14:32:07,462 - train.log - INFO - new best test f1 score:74.270
+2018-07-05 14:40:07,776 - train.log - INFO - Reading model parameters from model/test_ckpt\ner.ckpt
+2018-07-05 14:40:08,000 - train.log - INFO - evaluate:test
+2018-07-05 14:40:08,925 - train.log - INFO - processed 8668 tokens with 1726 phrases; found: 1694 phrases; correct: 1270.
+
+2018-07-05 14:40:08,925 - train.log - INFO - accuracy:  84.64%; precision:  74.97%; recall:  73.58%; FB1:  74.27
+
+2018-07-05 14:40:08,925 - train.log - INFO -                 0: precision:  76.28%; recall:  85.23%; FB1:  80.51  333
+
+2018-07-05 14:40:08,925 - train.log - INFO -                 1: precision:  52.53%; recall:  55.32%; FB1:  53.89  99
+
+2018-07-05 14:40:08,925 - train.log - INFO -                 2: precision:  73.09%; recall:  78.74%; FB1:  75.81  223
+
+2018-07-05 14:40:08,925 - train.log - INFO -                 3: precision:  77.09%; recall:  71.07%; FB1:  73.96  1039
+
+2018-07-05 14:40:09,013 - train.log - INFO - new best test f1 score:74.270
+2018-07-05 14:41:48,573 - train.log - INFO - Reading model parameters from model/test_ckpt\ner.ckpt
+2018-07-05 14:41:48,791 - train.log - INFO - evaluate:test
+2018-07-05 14:41:49,700 - train.log - INFO - processed 8668 tokens with 1726 phrases; found: 1694 phrases; correct: 1270.
+
+2018-07-05 14:41:49,701 - train.log - INFO - accuracy:  84.64%; precision:  74.97%; recall:  73.58%; FB1:  74.27
+
+2018-07-05 14:41:49,701 - train.log - INFO -                 0: precision:  76.28%; recall:  85.23%; FB1:  80.51  333
+
+2018-07-05 14:41:49,701 - train.log - INFO -                 1: precision:  52.53%; recall:  55.32%; FB1:  53.89  99
+
+2018-07-05 14:41:49,701 - train.log - INFO -                 2: precision:  73.09%; recall:  78.74%; FB1:  75.81  223
+
+2018-07-05 14:41:49,701 - train.log - INFO -                 3: precision:  77.09%; recall:  71.07%; FB1:  73.96  1039
+
+2018-07-05 14:41:49,791 - train.log - INFO - new best test f1 score:74.270

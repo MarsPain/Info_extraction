@@ -50,11 +50,11 @@ def get_logger(log_file):
 #     return eval_lines
 
 
-def test_ner(results, path):
+def test_ner(results, path, name):
     """
     Run perl script to evaluate model
     """
-    output_file = os.path.join(path, "ner_predict_test.utf8")
+    output_file = os.path.join(path, name+"_predict.utf8")
     with open(output_file, "w", encoding="utf8") as f:
         to_write = []
         for block in results:

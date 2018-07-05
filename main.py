@@ -41,7 +41,7 @@ flags.DEFINE_boolean("lower",       True,       "Wither lower case")
 
 flags.DEFINE_integer("max_epoch",   20,        "maximum training epochs")
 flags.DEFINE_integer("steps_check", 100,        "steps per checkpoint")
-flags.DEFINE_string("ckpt_path",    "hetong_ckpt",      "Path to save model")
+flags.DEFINE_string("ckpt_path",    "ckpt",      "Path to save model")
 flags.DEFINE_string("summary_path", "summary",      "Path to store summaries")
 flags.DEFINE_string("log_file",     "train.log",    "File for log")
 flags.DEFINE_string("map_file",     "maps.pkl",     "file for maps")
@@ -50,22 +50,14 @@ flags.DEFINE_string("config_file",  "config_file",  "File for config")
 flags.DEFINE_string("script",       "conlleval",    "evaluation script")
 flags.DEFINE_string("result_path",  "result",       "Path for results")
 flags.DEFINE_string("emb_file",     "wiki_100.utf8", "Path for pre_trained embedding")
-#用原数据集进行训练和测试
-# flags.DEFINE_string("train_file",   os.path.join("data", "example.train"),  "Path for train data")
-# flags.DEFINE_string("dev_file",     os.path.join("data", "example.dev"),    "Path for dev data")
-# flags.DEFINE_string("test_file",    os.path.join("data", "example.test"),   "Path for test data")
-#用中医证候数据集example_medicine_three进行训练和测试
-# flags.DEFINE_string("train_file",   os.path.join("data", "example_medicine_three.train"),  "Path for train data")
-# flags.DEFINE_string("dev_file",     os.path.join("data", "example_medicine_three.dev"),    "Path for dev data")
-# flags.DEFINE_string("test_file",    os.path.join("data", "example_medicine_three.test"),   "Path for test data")
 #用中医证候数据集example_medicine_all进行训练和测试
 # flags.DEFINE_string("train_file",   os.path.join("data", "example_medicine_all.train"),  "Path for train data")
 # flags.DEFINE_string("dev_file",     os.path.join("data", "example_medicine_all.dev"),    "Path for dev data")
 # flags.DEFINE_string("test_file",    os.path.join("data", "example_medicine_all.test"),   "Path for test data")
 #对上市公司公告信息进行训练和测试
-flags.DEFINE_string("train_file",   os.path.join("data", "announce.train"),  "Path for train data")
-flags.DEFINE_string("dev_file",     os.path.join("data", "announce.dev"),    "Path for dev data")
-flags.DEFINE_string("test_file",    os.path.join("data", "announce.test"),   "Path for test data")
+# flags.DEFINE_string("train_file",   os.path.join("data", "announce.train"),  "Path for train data")
+# flags.DEFINE_string("dev_file",     os.path.join("data", "announce.dev"),    "Path for dev data")
+# flags.DEFINE_string("test_file",    os.path.join("data", "announce.test"),   "Path for test data")
 
 
 FLAGS = tf.app.flags.FLAGS
@@ -100,7 +92,7 @@ def config_model(char_to_id, tag_to_id):
 def evaluate(sess, model, name, data, id_to_tag, logger):
     logger.info("evaluate:{}".format(name))
     ner_results = model.evaluate(sess, data, id_to_tag)
-    eval_lines = test_ner(ner_results, FLAGS.result_path)
+    eval_lines = test_ner(ner_results, FLAGS.result_path, name)
     for line in eval_lines:
         logger.info(line)
     f1 = float(eval_lines[1].strip().split()[-1])
@@ -119,12 +111,15 @@ def evaluate(sess, model, name, data, id_to_tag, logger):
         return f1 > best_test_f1
 
 
-def train():
+def train(model_name):
     # load data sets
     #加载数据集的sentence，并处理成列表，每个sentence中的词及相应的标签也处理成列表
-    train_sentences = load_sentences(FLAGS.train_file, FLAGS.lower, FLAGS.zeros)
-    dev_sentences = load_sentences(FLAGS.dev_file, FLAGS.lower, FLAGS.zeros)
-    test_sentences = load_sentences(FLAGS.test_file, FLAGS.lower, FLAGS.zeros)
+    train_file = os.path.join("data/round1_train_20180518", model_name+"/announce.train")
+    dev_file = os.path.join("data/round1_train_20180518", model_name+"/announce.dev")
+    test_file = os.path.join("data/round1_train_20180518", model_name+"/announce.test")
+    train_sentences = load_sentences(train_file, FLAGS.lower, FLAGS.zeros)
+    dev_sentences = load_sentences(dev_file, FLAGS.lower, FLAGS.zeros)
+    test_sentences = load_sentences(test_file, FLAGS.lower, FLAGS.zeros)
     # print("dev_sentences:", dev_sentences)
 
     #原数据的标注模式与需要的标注模式不同时用update_tag_scheme对标注模式进行转换
@@ -134,7 +129,8 @@ def train():
 
     # create maps if not exist
     #os.path.isfile查找是否存在该文件
-    if not os.path.isfile(FLAGS.map_file):
+    map_file = "data/" + model_name + "_maps.pkl"
+    if not os.path.isfile(map_file):
         # create dictionary for word
         #使用预训练的词向量
         if FLAGS.pre_emb:
@@ -156,10 +152,10 @@ def train():
         # Create a dictionary and a mapping for tags
         _t, tag_to_id, id_to_tag = tag_mapping(train_sentences)
         print("tag_to_id", tag_to_id, len(tag_to_id))
-        with open(FLAGS.map_file, "wb") as f:
+        with open(map_file, "wb") as f:
             pickle.dump([char_to_id, id_to_char, tag_to_id, id_to_tag], f)
     else:
-        with open(FLAGS.map_file, "rb") as f:
+        with open(map_file, "rb") as f:
             char_to_id, id_to_char, tag_to_id, id_to_tag = pickle.load(f)
 
     # prepare data, get a collection of list containing index
@@ -200,8 +196,9 @@ def train():
     tf_config = tf.ConfigProto()
     # tf_config.gpu_options.allow_growth = True
     steps_per_epoch = train_manager.len_data
+    ckpt_path = "model/" + model_name + "_ckpt"
     with tf.Session(config=tf_config) as sess:
-        model = create_model(sess, Model, FLAGS.ckpt_path, load_word2vec, config, id_to_char, logger)
+        model = create_model(sess, Model, ckpt_path, load_word2vec, config, id_to_char, logger)
         logger.info("start training")
         loss = []
         for i in range(FLAGS.max_epoch):
@@ -217,26 +214,29 @@ def train():
 
             best = evaluate(sess, model, "dev", dev_manager, id_to_tag, logger)
             if best:
-                save_model(sess, model, FLAGS.ckpt_path, logger)
+                save_model(sess, model, ckpt_path, logger)
             # evaluate(sess, model, "test", test_manager, id_to_tag, logger)
 
 
-def evaluate_line():
+def evaluate_line(model_name):
     config = load_config(FLAGS.config_file)
     logger = get_logger(FLAGS.log_file)
     # limit GPU memory
     tf_config = tf.ConfigProto()
     tf_config.gpu_options.allow_growth = True
-    with open(FLAGS.map_file, "rb") as f:
+    map_file = "data/" + model_name + "_maps.pkl"
+    with open(map_file, "rb") as f:
         char_to_id, id_to_char, tag_to_id, id_to_tag = pickle.load(f)
-    test_sentences = load_sentences(FLAGS.test_file, FLAGS.lower, FLAGS.zeros)
+    test_file = os.path.join("data/round1_train_20180518", model_name+"/announce.test") #本地测试用
+    test_sentences = load_sentences(test_file, FLAGS.lower, FLAGS.zeros)
     test_data = prepare_dataset(test_sentences, char_to_id, tag_to_id, FLAGS.lower)
     test_manager = BatchManager(test_data, 1)
+    ckpt_path = "model/" + model_name + "_ckpt"
     with tf.Session(config=tf_config) as sess:
-        model = create_model(sess, Model, FLAGS.ckpt_path, load_word2vec, config, id_to_char, logger)
+        model = create_model(sess, Model, ckpt_path, load_word2vec, config, id_to_char, logger)
 
         #对整个数据集进行预测
-        evaluate(sess, model, "test", test_manager, id_to_tag, logger)
+        evaluate(sess, model, model_name, test_manager, id_to_tag, logger)
 
         #对单个句子进行预测
         # while True:
@@ -260,6 +260,13 @@ def main(_):
         train()
     else:
         evaluate_line()
+
+def main_ner(is_train, model_name):
+    if is_train:
+        clean(FLAGS)
+        train(model_name)
+    else:
+        evaluate_line(model_name)
 
 
 if __name__ == "__main__":

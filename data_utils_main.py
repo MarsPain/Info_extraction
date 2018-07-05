@@ -84,7 +84,7 @@ def unit_norm(s):
     s = re.sub(pattern1, replace1, s)
 
     # s = "他的生日是2016年12月12日，他在2017年8月7日至9月10日去大学了，有50%的学生"  #测试pattern2
-    pattern2 = re.compile(r"(\d{4}年\d{1,2}月\d{1,2}日至\d{1,2}月\d{1,2}日)|(\d{4}年\d{1,2}月\d{1,2}日)|(\d+\.?\d+%)")
+    pattern2 = re.compile(r"(\d{4}年\d{1,2}月\d{1,2}日至\d{1,2}月\d{1,2}日)|(\d{4}年\d{1,2}月\d{1,2}日)|(\d+\.?\d+%)")   #继续完善正则表达式，然后进行标注，因为可能存在XXXX年XX月XX日-XX月XX日
     def replace2(matchobj):
         if matchobj[0][-1] == "%":
             value = 0.01*float(matchobj[0][:-1])
@@ -115,8 +115,8 @@ def unit_norm(s):
 
 
 def output_data(model_name):
-    filename_predict = os.path.join("data", model_name+"_predict.utf8")
-    filename_result = os.path.join("data", model_name+".txt")
+    filename_predict = os.path.join("result", model_name+"_predict.utf8")
+    filename_result = os.path.join("result", model_name+".txt")
     result = "公告id	股东全称	股东简称	变动截止日期	变动价格	变动数量	变动后持股数	变动后持股比例"
     with open(filename_predict, "r", encoding="utf-8") as f:
         flag = True
