@@ -99,6 +99,15 @@ import re
 # s = re.sub(pattern4, replace4, s)
 # print(s)
 
-s = "州发展![image](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQsAAAEBCAIAAADgrBdjAAAABmJLR0)adsd"
-s = re.sub(r"(\[image\].*\))", " ", s)
+# s = "州发展![image](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQsAAAEBCAIAAADgrBdjAAAABmJLR0)adsd"
+# s = re.sub(r"(\[image\].*\))", " ", s)
+# print(s)
+
+s = "额为137,630,695元，币共计16928.797540000元（大写：人民币,51，452元"
+pattern = re.compile(r"(\d+.\d+)|(\d{1,}.\d{3}.\d{3})")
+def test(matchobj):
+    string = matchobj[0].replace("，|,|.", "")
+    print(string)
+    return string
+s = re.sub(pattern, test, s)
 print(s)

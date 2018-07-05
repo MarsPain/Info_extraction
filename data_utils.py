@@ -94,9 +94,11 @@ def unit_norm(s):
         return matchobj
     s = re.sub(pattern2, replace2, s)
 
-    pattern3 = re.compile(r"(\d{1,3}.\d{3}.\d{3}.\d{3})|(\d{1,3}.\d{3}.\d{3})|(\d{1,3}.\d{3})|")
+    pattern3 = re.compile(r"(\d{1,}.\d{3}.\d{3}.\d{3})|(\d{1,}.\d{3}.\d{3})|(\d{1,}.\d{3})|(\d+.\d+)")
     def replace3(matchobj):
         string = matchobj[0].replace(",", "")
+        string = string.replace(".", "")
+        string = string.replace("，", "")
         return string
     s = re.sub(pattern3, replace3, s)
 
@@ -161,9 +163,10 @@ def output_data(filename_ner, filename_result_zengjianchi):
                     else:
                         entity = ""
     with open(filename_result_zengjianchi, "w", encoding="utf-8") as f:
+        result.strip()
         f.write(result)
 
 if __name__ == "__main__":
-    # read_data(dirname_dingzeng, dirname_txt_dingzeng)
+    # read_data(dirname_hetong, dirname_txt_hetong)
     # process_data(dirname_txt2_zengjianchi)
     output_data(filename_predict_zengjianchi, filename_result_zengjianchi)
