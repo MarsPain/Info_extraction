@@ -1,181 +1,322 @@
-import html2text
-import os
+# encoding = utf8
 import re
+import math
+import codecs
+import random
 
-dirname_zengjianchi = "data/round1_train_20180518/增减持/html"
-dirname_dingzeng = "data/round1_train_20180518/定增/html"
-dirname_hetong = "data/round1_train_20180518/重大合同/html"
-dirname_txt_zengjianchi = "data/round1_train_20180518/增减持/txt"
-dirname_txt_dingzeng = "data/round1_train_20180518/定增/txt"
-dirname_txt_hetong = "data/round1_train_20180518/重大合同/txt"
-dirname_txt2_zengjianchi = "data/round1_train_20180518/增减持/txt2"
-dirname_txt2_dingzeng = "data/round1_train_20180518/定增/txt2"
-dirname_txt2_hetong = "data/round1_train_20180518/重大合同/txt2"
-filename_predict_zengjianchi = "data/predict_zengjianchi.utf8"
-filename_predict_dingzeng = "data/predict_dingzeng.utf8"
-filename_predict_hetong = "data/predict_hetong.utf8"
-filename_result_zengjianchi = "data/zengjianchi.txt"
-filename_result_dingzeng = "data/dingzeng.txt"
-filename_result_hetong = "data/hetong.txt"
+import numpy as np
+import jieba
+jieba.initialize()
 
-def read_data(dirname, dirname_txt):
-    h2t = html2text.HTML2Text() #初始化html2text工具
-    h2t.ignore_links = True #表示忽略html页面中的链接
-    count = 0
-    for filename in os.listdir(dirname):
-        announce_id = filename[:-5]
-        # print("announce_id:", announce_id)
-        filename = os.path.join(dirname, filename)
-        filename_txt = os.path.join(dirname_txt, announce_id+".txt")
-        with open(filename, "r", encoding="utf-8") as f:
-            f = f.read()
-            s = h2t.handle(f)   #读取为txt格式的string
-            s = s.replace(" ", ""); s = s.replace("\n", "") #去除空格和换行符
-            s = re.sub(r"(\[image\].+\))", " ", s)  #去除图像数据的影响
-            s = unit_norm(s)    #对日期和比例等单位进行归一化处理
-            s = "公告ID" + announce_id + s #将公告id(announce_id)加入每个相应文件的头部
-            # print(s)
-            # count += 1
-            # if count>50: break
-            with open(filename_txt, "w", encoding="utf-8") as f_txt:
-                f_txt.write(s)
-
-def process_data(dirname):
-    # announce_train = "data/round1_train_20180518/增减持/announce.train"
-    # announce_dev = "data/round1_train_20180518/增减持/announce.dev"
-    # announce_test = "data/round1_train_20180518/增减持/announce.test"
-
-    announce_train = "data/round1_train_20180518/重大合同/announce.train"
-    announce_dev = "data/round1_train_20180518/重大合同/announce.dev"
-    announce_test = "data/round1_train_20180518/重大合同/announce.test"
-    all_filenames = os.listdir(dirname)
-    # print(all_filenames)
-    num_filenames = len(all_filenames)
-    # num_filenames = 20
-    count = 0
-    announce_txt = ""
-    for filename in all_filenames:
-        filename = os.path.join(dirname, filename)
-        count += 1
-        with open(filename, 'r', encoding="utf-8") as f:
-            announce_txt = announce_txt + f.read() + "\n"
-            # print(announce_txt)
-            if count==8*(num_filenames//10):
-                with open(announce_train, 'w', encoding="utf-8") as train:
-                    train.write(announce_txt)
-                    announce_txt = ""
-            elif count==num_filenames:
-                with open(announce_dev, 'w', encoding="utf-8") as dev:
-                    dev.write(announce_txt)
-            elif count==num_filenames:
-                with open(announce_test, 'w', encoding="utf-8") as test:
-                    test.write(announce_txt)
-
-def unit_norm(s):
-    pattern1 = re.compile(r"(\d{1,2}月)|(\d{1,2}日)")
-    def replace1(matchobj):
-        if len(matchobj[0]) == 2:
-            # print(type(matchobj[0]), matchobj[0])
-            matchobj = "0" + matchobj[0]
-            # print(matchobj)
-            return matchobj
-        else:
-            return matchobj[0]
-    s = re.sub(pattern1, replace1, s)
-
-    # s = "他的生日是2016年12月12日，他在2017年8月7日至9月10日去大学了，有50%的学生"  #测试pattern2
-    pattern2 = re.compile(r"(\d{4}年\d{1,2}月\d{1,2}日至\d{1,2}月\d{1,2}日)|(\d{4}年\d{1,2}月\d{1,2}日)|(\d+\.?\d+%)")
-    def replace2(matchobj):
-        if matchobj[0][-1] == "%":
-            value = 0.01*float(matchobj[0][:-1])
-            matchobj = re.sub(matchobj[0], str(value), matchobj[0])
-        else:
-            year = matchobj[0][:4]
-            matchobj = re.sub("至", "至"+year+"年", matchobj[0])
-            matchobj = re.sub("年|月", "-", matchobj)
-            matchobj = re.sub("日", "", matchobj)
-        return matchobj
-    s = re.sub(pattern2, replace2, s)
-
-    pattern3 = re.compile(r"(\d{1,}.\d{3}.\d{3}.\d{3})|(\d{1,}.\d{3}.\d{3})|(\d{1,}.\d{3})|(\d+.\d+)")
-    def replace3(matchobj):
-        string = matchobj[0].replace(",", "")
-        string = string.replace("，", "")
-        return string
-    s = re.sub(pattern3, replace3, s)
-
-    pattern4 = re.compile(r"(\d+\.?\d+万)")
-    def replace4(matchobj):
-        num = matchobj[0][:-1]
-        new_num = float(num) * 10000
-        return str(new_num)
-    s = re.sub(pattern4, replace4, s)
-
-    return s
-
-
-def output_data(filename_ner, filename_result_zengjianchi):
-    result = "公告id	股东全称	股东简称	变动截止日期	变动价格	变动数量	变动后持股数	变动后持股比例"
-    with open(filename_ner, "r", encoding="utf-8") as f:
-        flag = True
-        temp_result = ["\t" for i in range(8)]   #用于保存一行结构化的实体
-        entity = "" #用于保存一个实体
-        for line in f:
-            # print(line)
-            char_tag_predict = line.split()
-            # print(char_tag_predict)
-            # print(len(char_tag_predict))
-            if len(char_tag_predict) != 3:
-                continue
-            if char_tag_predict[-1] == "O":
-                # print(char_tag_predict[0])
-                continue
+#创建字典
+def create_dico(item_list):
+    """
+    Create a dictionary of items from a list of list of items.
+    """
+    assert type(item_list) is list
+    dico = {}
+    for items in item_list:
+        for item in items:
+            if item not in dico:
+                dico[item] = 1
             else:
-                predict = char_tag_predict[-1]
-                char = char_tag_predict[0]  #被标注预测的字符
-                predict_loc = predict[0]    #被标注预测的在实体中的位置（B、I、O等）
-                predict_type = predict[-1]  #被标注预测的在实体类型（0-7，标注还是得从0而不是1开始，方便输出）
-                # print(type(predict_type))
-                # print("char:", char, "predict_loc:", predict_loc, "predict_type:", predict_type)
-                if predict_loc == "B" or predict_loc == "I":
-                    entity += char
-                elif predict_loc == "E":
-                    entity += char
-                    #如果是新的公告id实体，则说明属于新的公告文本，将上一个temp_result加入result并换行，
-                    # 然后重新初始化temp_result并用entity对公告id赋值。
-                    if int(predict_type) == 1:
-                        result = result + "\t".join(temp_result) + "\n"
-                        temp_result = ["\t" for i in range(8)]
-                        temp_result[0] = entity
-                        entity = ""
-                    #如果是当前公告中的一条结构化信息，则只要对该行数据的temp_result赋值即可
-                    elif temp_result[int(predict_type)-1] == "\t":
-                        temp_result[int(predict_type)-1] = entity
-                        entity = ""
-                    #该实体依然在当前的公告文本中，但是属于另一条结构化信息，所以先从当前temp_result
-                    # 中取出公告id，然后将temp_result加入result中，再换行，
-                    # 重新初始化temp_result，并对公告id和当前的检测到的实体entity赋值
-                    elif int(predict_type) == 2 and temp_result[1] != "\t":
-                        announce_id = temp_result[0]
-                        result = result + "\t".join(temp_result) + "\n"
-                        temp_result = ["\t" for i in range(8)]
-                        temp_result[0] = announce_id
-                        temp_result[int(predict_type)-1] = entity
-                        entity = ""
-                    else:
-                        entity = ""
-    with open(filename_result_zengjianchi, "w", encoding="utf-8") as f:
-        f.write(result)
+                #计算词频
+                dico[item] += 1
+    return dico
 
-if __name__ == "__main__":
-    # read_data(dirname_zengjianchi, dirname_txt_zengjianchi)
-    # process_data(dirname_txt2_zengjianchi)
-    # output_data(filename_predict_zengjianchi, filename_result_zengjianchi)
 
-    # read_data(dirname_hetong, dirname_txt_hetong)
-    # process_data(dirname_txt2_hetong)
-    # output_data(filename_predict_hetong, filename_result_hetong)
+def create_mapping(dico):
+    """
+    Create a mapping (item to ID / ID to item) from a dictionary.
+    Items are ordered by decreasing frequency.
+    """
+    #根据字典dico创建两种映射字典
+    sorted_items = sorted(dico.items(), key=lambda x: (-x[1], x[0]))    #按照词频排序
+    # for i, v in enumerate(sorted_items):
+    #     print(i, v)
+    id_to_item = {i: v[0] for i, v in enumerate(sorted_items)}  #id（根据词频排序从0开始）到word
+    item_to_id = {v: k for k, v in id_to_item.items()}  #反转映射
+    return item_to_id, id_to_item
 
-    read_data(dirname_dingzeng, dirname_txt_dingzeng)
-    # process_data(dirname_txt2_dingzeng)
-    # output_data(filename_predict_dingzeng, filename_result_dingzeng)
+
+def zero_digits(s):
+    """
+    Replace every digit in a string by a zero.
+    """
+    return re.sub('\d', '0', s)
+
+
+def iob2(tags):
+    """
+    Check that tags have a valid IOB format.
+    Tags in IOB1 format are converted to IOB2.
+    """
+    for i, tag in enumerate(tags):
+        if tag == 'O':
+            continue
+        split = tag.split('-')
+        if len(split) != 2 or split[0] not in ['I', 'B']:
+            return False
+        if split[0] == 'B':
+            continue
+        elif i == 0 or tags[i - 1] == 'O':  # conversion IOB1 to IOB2
+            tags[i] = 'B' + tag[1:]
+        elif tags[i - 1][1:] == tag[1:]:
+            continue
+        else:  # conversion IOB1 to IOB2
+            tags[i] = 'B' + tag[1:]
+    return True
+
+
+def iob_iobes(tags):
+    """
+    IOB -> IOBES
+    """
+    new_tags = []
+    for i, tag in enumerate(tags):
+        if tag == 'O':
+            new_tags.append(tag)
+        elif tag.split('-')[0] == 'B':
+            if i + 1 != len(tags) and \
+               tags[i + 1].split('-')[0] == 'I':
+                new_tags.append(tag)
+            else:
+                new_tags.append(tag.replace('B-', 'S-'))
+        elif tag.split('-')[0] == 'I':
+            if i + 1 < len(tags) and \
+                    tags[i + 1].split('-')[0] == 'I':
+                new_tags.append(tag)
+            else:
+                new_tags.append(tag.replace('I-', 'E-'))
+        else:
+            raise Exception('Invalid IOB format!')
+    return new_tags
+
+
+def iobes_iob(tags):
+    """
+    IOBES -> IOB
+    """
+    new_tags = []
+    for i, tag in enumerate(tags):
+        if tag.split('-')[0] == 'B':
+            new_tags.append(tag)
+        elif tag.split('-')[0] == 'I':
+            new_tags.append(tag)
+        elif tag.split('-')[0] == 'S':
+            new_tags.append(tag.replace('S-', 'B-'))
+        elif tag.split('-')[0] == 'E':
+            new_tags.append(tag.replace('E-', 'I-'))
+        elif tag.split('-')[0] == 'O':
+            new_tags.append(tag)
+        else:
+            raise Exception('Invalid format!')
+    return new_tags
+
+
+def insert_singletons(words, singletons, p=0.5):
+    """
+    Replace singletons by the unknown word with a probability p.
+    """
+    new_words = []
+    for word in words:
+        if word in singletons and np.random.uniform() < p:
+            new_words.append(0)
+        else:
+            new_words.append(word)
+    return new_words
+
+
+def get_seg_features(string):
+    """
+    Segment text with jieba
+    features are represented in bies format
+    s donates single word
+    """
+    seg_feature = []
+    # print(string)
+    for word in jieba.cut(string):
+        # print(word)
+        if len(word) == 1:
+            seg_feature.append(0)
+        else:
+            tmp = [2] * len(word)
+            tmp[0] = 1
+            tmp[-1] = 3
+            seg_feature.extend(tmp)
+    return seg_feature
+
+
+def create_input(data):
+    """
+    Take sentence data and return an input for
+    the training or the evaluation function.
+    """
+    inputs = list()
+    inputs.append(data['chars'])
+    inputs.append(data["segs"])
+    inputs.append(data['tags'])
+    return inputs
+
+#从预训练词向量文件中加载词向量
+def load_word2vec(emb_path, id_to_word, word_dim, old_weights):
+    """
+    Load word embedding from pre-trained file
+    embedding size must match
+    """
+    new_weights = old_weights
+    print('Loading pretrained embeddings from {}...'.format(emb_path))
+    pre_trained = {}
+    emb_invalid = 0
+    for i, line in enumerate(codecs.open(emb_path, 'r', 'utf-8')):
+        line = line.rstrip().split()
+        if len(line) == word_dim + 1:
+            pre_trained[line[0]] = np.array(
+                [float(x) for x in line[1:]]
+            ).astype(np.float32)
+        else:
+            emb_invalid += 1
+    if emb_invalid > 0:
+        print('WARNING: %i invalid lines' % emb_invalid)
+    c_found = 0
+    c_lower = 0
+    c_zeros = 0
+    n_words = len(id_to_word)
+    # Lookup table initialization
+    for i in range(n_words):
+        word = id_to_word[i]
+        if word in pre_trained:
+            new_weights[i] = pre_trained[word]
+            c_found += 1
+        elif word.lower() in pre_trained:
+            new_weights[i] = pre_trained[word.lower()]
+            c_lower += 1
+        elif re.sub('\d', '0', word.lower()) in pre_trained:
+            new_weights[i] = pre_trained[
+                re.sub('\d', '0', word.lower())
+            ]
+            c_zeros += 1
+    print('Loaded %i pretrained embeddings.' % len(pre_trained))
+    print('%i / %i (%.4f%%) words have been initialized with '
+          'pretrained embeddings.' % (
+        c_found + c_lower + c_zeros, n_words,
+        100. * (c_found + c_lower + c_zeros) / n_words)
+    )
+    print('%i found directly, %i after lowercasing, '
+          '%i after lowercasing + zero.' % (
+        c_found, c_lower, c_zeros
+    ))
+    return new_weights
+
+
+def full_to_half(s):
+    """
+    Convert full-width character to half-width one 
+    """
+    n = []
+    for char in s:
+        num = ord(char)
+        if num == 0x3000:
+            num = 32
+        elif 0xFF01 <= num <= 0xFF5E:
+            num -= 0xfee0
+        char = chr(num)
+        n.append(char)
+    return ''.join(n)
+
+
+def cut_to_sentence(text):
+    """
+    Cut text to sentences 
+    """
+    sentence = []
+    sentences = []
+    len_p = len(text)
+    pre_cut = False
+    for idx, word in enumerate(text):
+        sentence.append(word)
+        cut = False
+        if pre_cut:
+            cut=True
+            pre_cut=False
+        if word in u"。;!?\n":
+            cut = True
+            if len_p > idx+1:
+                if text[idx+1] in ".。”\"\'“”‘’?!":
+                    cut = False
+                    pre_cut=True
+
+        if cut:
+            sentences.append(sentence)
+            sentence = []
+    if sentence:
+        sentences.append("".join(list(sentence)))
+    return sentences
+
+
+def replace_html(s):
+    s = s.replace('&quot;','"')
+    s = s.replace('&amp;','&')
+    s = s.replace('&lt;','<')
+    s = s.replace('&gt;','>')
+    s = s.replace('&nbsp;',' ')
+    s = s.replace("&ldquo;", "“")
+    s = s.replace("&rdquo;", "”")
+    s = s.replace("&mdash;","")
+    s = s.replace("\xa0", " ")
+    return(s)
+
+
+def input_from_line(line, char_to_id):
+    """
+    Take sentence data and return an input for
+    the training or the evaluation function.
+    """
+    line = full_to_half(line)
+    line = replace_html(line)
+    inputs = list()
+    inputs.append([line])
+    line.replace(" ", "$")
+    inputs.append([[char_to_id[char] if char in char_to_id else char_to_id["<UNK>"]
+                   for char in line]])
+    inputs.append([get_seg_features(line)])
+    inputs.append([[]])
+    return inputs
+
+
+class BatchManager(object):
+
+    def __init__(self, data,  batch_size):
+        self.batch_data = self.sort_and_pad(data, batch_size)
+        self.len_data = len(self.batch_data)
+
+    def sort_and_pad(self, data, batch_size):
+        num_batch = int(math.ceil(len(data) /batch_size))
+        sorted_data = sorted(data, key=lambda x: len(x[0]))
+        batch_data = list()
+        for i in range(num_batch):
+            batch_data.append(self.pad_data(sorted_data[i*batch_size : (i+1)*batch_size]))
+        return batch_data
+
+    @staticmethod
+    #填充数据以对齐长度？
+    def pad_data(data):
+        strings = []
+        chars = []
+        segs = []
+        targets = []
+        max_length = max([len(sentence[0]) for sentence in data])
+        for line in data:
+            string, char, seg, target = line
+            padding = [0] * (max_length - len(string))
+            strings.append(string + padding)
+            chars.append(char + padding)
+            segs.append(seg + padding)
+            targets.append(target + padding)
+        return [strings, chars, segs, targets]
+
+    def iter_batch(self, shuffle=False):
+        if shuffle:
+            random.shuffle(self.batch_data)
+        for idx in range(self.len_data):
+            yield self.batch_data[idx]

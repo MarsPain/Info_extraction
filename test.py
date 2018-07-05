@@ -1,113 +1,111 @@
-# a = [1, 2, 3, 4, 5, 6,7]
-# print(a[2:-2])
+# l = [1, 2, 3]
+# l.pop(2)
+# print(l)
 
-import re
-# pattern = re.compile(r"\d{4}"+"年"+r"\d{1,2}"+"月"+r"\d{1,2}"+"日")
-# s = "他的生日是2016年12月12日，他在2017年8月7日去大学了"
-# print(re.findall(pattern,s))
-# def test(matchobj):
-#     print(1)
-#     print(type(matchobj[0]))
-#     matchobj = re.sub("年|月", "-", matchobj[0])
-#     matchobj = re.sub("日", "", matchobj)
-#     return matchobj
-# s = re.sub(pattern, test, s)
-# print(s)
+# a = 3
+# a <<= 0
+# print(a)
 
-# pattern2 = re.compile(r"(\d{4}年\d{1,2}月\d{1,2}日至\d{1,2}月\d{1,2}日)")
-# s = "他的生日是2016年12月12日，他在2017年8月7日至9月10日去大学了"
-# # print(re.findall(pattern,s))
-# def test2(matchobj):
-#     print(1)
-#     print(type(matchobj[0]))
-#     year = matchobj[0][:4]
-#     matchobj = re.sub("至", "至"+year+"年", matchobj[0])
-#     matchobj = re.sub("年|月", "-", matchobj)
-#     matchobj = re.sub("日", "", matchobj)
-#     return matchobj
-# s = re.sub(pattern2, test2, s)
-# print(s)
+# l = [1, 2, 3, 4, 5]
+# for i in range(3, 0, -1):
+#     print(l[i])
 
-# pattern3 = re.compile(r"(\d+%)")
-# s = "我50%"
-# def test3(matchobj):
-#     print("matchobj", matchobj[0])
-#     value = 0.01*int(matchobj[0][:-1])
-#     print(value)
-#     matchobj = re.sub(matchobj[0], str(value), matchobj[0])
-#     return matchobj
-# s = re.sub(pattern3, test3, s)
-# print(s)
+import tensorflow as tf
+# a = [[[1, 1, 1, 1], [1, 1, 1, 1],
+#      [2, 2, 2, 2], [2, 2, 2, 2],
+#      [3, 3, 3, 3], [3, 3, 3, 3],]]
+# b = [[[1, 1, 1, 1], [1, 1, 1, 1],
+#      [2, 2, 2, 2], [2, 2, 2, 2],
+#      [3, 3, 3, 3], [3, 3, 3, 3],]]
+# c = tf.concat([a, b], axis=-1)
+# print(c)
+# target = [[0, 1, 2, 0,], [0, 1, 2, 0]]
+# batch_size = 2
+# nums_tags = 8
+# ones = tf.cast(nums_tags * tf.ones([batch_size, 1]), tf.int32)
+# print(ones)
+# two = tf.concat([ones, target], axis=-1)
+# print(two)
 
-# s = "50%"
-# s = int(s[:-1])
-# print(s)
-
-# pattern4 = re.compile(r"(\d{4}年\d{1,2}月\d{1,2}日至\d{1,2}月\d{1,2}日)|(\d{4}年\d{1,2}月\d{1,2}日)|(\d+%)")
-# s = "他的生日是2016年12月12日，他在2017年8月7日至9月10日去大学了，有50%的学生"
-# # print(re.findall(pattern,s))
-# def test4(matchobj):
-#     print(1)
-#     print(type(matchobj[0]))
-#     if matchobj[0][-1] == "%":
-#         value = 0.01*int(matchobj[0][:-1])
-#         print(value)
-#         matchobj = re.sub(matchobj[0], str(value), matchobj[0])
-#         return matchobj
-#     else:
-#         year = matchobj[0][:4]
-#         matchobj = re.sub("至", "至"+year+"年", matchobj[0])
-#         matchobj = re.sub("年|月", "-", matchobj)
-#         matchobj = re.sub("日", "", matchobj)
-#     return matchobj
-# s = re.sub(pattern4, test4, s)
-# print(s)
-
-# pattern5 = re.compile(r"(\d+\.?\d+%)")
-# s = "我50|50%|0.345%"
-# def test5(matchobj):
-#     print("matchobj", matchobj[0])
-#     value = 0.01*float(matchobj[0][:-1])
-#     print(value)
-#     matchobj = re.sub(matchobj[0], str(value), matchobj[0])
-#     return matchobj
-# s = re.sub(pattern5, test5, s)
-# print(s)
-
-
-# s = ["\t" for i in range(4)]
-# print(s)
-# s[0] = "a"; s[2] = "b"
-# if s[3] == "\t":
-#     print("Yes!!!!")
-# print("\t".join(s))
-
-# s = "67.236.244"
-# pattern = re.compile(r"(\d{1,3}\.\d{3}\.\d{3}\.\d{3})|(\d{1,3}\.\d{3}\.\d{3})|(\d{1,3}\.\d{3})")
-# def test(matchobj):
-#     string = matchobj[0].replace(".", "")
-#     return string
-# s = re.sub(pattern, test, s)
-# print(s)
-
-# s = "400万"
-# pattern4 = re.compile(r"(\d+万)")
-# def replace4(matchobj):
-#     num = matchobj[0][:-1]
-#     new_num = int(num) * 10000
-#     return str(new_num)
-# s = re.sub(pattern4, replace4, s)
-# print(s)
-
-# s = "州发展![image](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQsAAAEBCAIAAADgrBdjAAAABmJLR0)adsd"
-# s = re.sub(r"(\[image\].*\))", " ", s)
-# print(s)
-
-s = "额为137,630,695元，币共计16928.797540000元（大写：人民币,51，452元"
-pattern = re.compile(r"(\d+.\d+)|(\d{1,}.\d{3}.\d{3})")
-def test(matchobj):
-    string = matchobj[0].replace("，|,|.", "")
-    print(string)
-    return string
-s = re.sub(pattern, test, s)
-print(s)
+import numpy as np
+from tensorflow.python.framework import dtypes
+from tensorflow.python.ops import array_ops
+from tensorflow.python.ops import math_ops
+from tensorflow.python.ops import rnn
+from tensorflow.python.ops import rnn_cell
+from tensorflow.python.ops import variable_scope as vs
+#input.shape=[batch_size, max_seq_len, num_tags]=[3,4,3]
+sess = tf.Session()
+inputs = [[[0, 0, 0, 1], [0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 0, 1]],
+         [[0, 0, 0, 1], [0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 0, 1]],
+         [[0, 0, 0, 1], [0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 0, 1]]]
+#通过字典和numpy操作加入权重参数
+# inputs_tensor= tf.convert_to_tensor(inputs)
+# inputs_numpy = inputs_tensor.eval(session=sess)
+# print("offsets_numpy:", inputs_numpy)
+# weight_dict = {0:1, 1:1, 2:2, 3:1}
+# for i in range(len(inputs_numpy)):
+#     for j in range(len(inputs_numpy[i])):
+#         inputs_numpy[i][j] *= weight_dict[np.argmax(inputs_numpy[i][j])]
+# print(inputs_numpy)
+# inputs= tf.convert_to_tensor(inputs_numpy)
+#通过tensor点乘加入权重参数
+# inputs= tf.convert_to_tensor(inputs)
+# weight_matrix = [[[1, 1, 2, 1], [1, 1, 2, 1], [1, 1, 2, 1], [1, 1, 2, 1]],
+#                  [[1, 1, 2, 1], [1, 1, 2, 1], [1, 1, 2, 1], [1, 1, 2, 1]],
+#                  [[1, 1, 2, 1], [1, 1, 2, 1], [1, 1, 2, 1],[1, 1, 2, 1]]]
+# weight_matrix = tf.convert_to_tensor(weight_matrix)
+# inputs = inputs*weight_matrix
+# print("inputs", inputs)
+#通过字典初始化权重参数矩阵，然后通过tensor点乘加入权重参数
+# inputs = tf.convert_to_tensor(inputs)
+# weight_list = [1, 1, 2, 1]
+# weight_matrix_numpy = np.ones([3, 4, 4])
+# for i in range(len(weight_matrix_numpy)):
+#     for j in range(len(weight_matrix_numpy[i])):
+#         weight_matrix_numpy[i][j] = weight_list
+# print("weight_matrix_numpy:", weight_matrix_numpy)
+# weight_matrix = tf.convert_to_tensor(weight_matrix_numpy)
+# weight_matrix = tf.cast(weight_matrix, "int32")
+# inputs = inputs*weight_matrix
+#用tensor完成权重参数的添加
+inputs = tf.convert_to_tensor(inputs)
+batch_size = array_ops.shape(inputs)[0]
+max_seq_len = array_ops.shape(inputs)[1]
+num_tags = array_ops.shape(inputs)[2]
+weight_matrix = tf.tile([[[1, 1, 2, 1]]], [batch_size, max_seq_len, 1])
+weight_matrix = tf.reshape(weight_matrix, [batch_size, max_seq_len, num_tags])
+weight_matrix_numpy = weight_matrix.eval(session=sess)
+print("weight_matrix_numpy:", weight_matrix_numpy)
+inputs = inputs*weight_matrix
+#tag_indices=[batch_size, max_seq_len]=[3,4]
+tag_indices = [[3, 2, 2, 3],
+               [3, 2, 2, 3],
+               [3, 2, 2, 3]]
+batch_size = array_ops.shape(inputs)[0]
+max_seq_len = array_ops.shape(inputs)[1]
+num_tags = array_ops.shape(inputs)[2]
+# print(batch_size, max_seq_len, num_tags)
+flattened_inputs = array_ops.reshape(inputs, [-1])
+flattened_inputs_numpy = flattened_inputs.eval(session=sess)
+print("flattened_inputs_numpy:", flattened_inputs_numpy)
+offsets = array_ops.expand_dims(math_ops.range(batch_size) * max_seq_len * num_tags, 1)
+offsets_numpy = offsets.eval(session=sess)  #将tensor转换成array的方法
+print("offsets_numpy:", offsets_numpy, type(offsets_numpy))
+offsets += array_ops.expand_dims(math_ops.range(max_seq_len) * num_tags, 0)
+offsets_numpy2 = offsets.eval(session=sess)
+print("offsets_numpy2:", offsets_numpy2)
+flattened_tag_indices = array_ops.reshape(offsets + tag_indices, [-1])
+flattened_tag_indices_numpy = flattened_tag_indices.eval(session=sess)
+print("flattened_tag_indices_numpy:", flattened_tag_indices_numpy)
+#开始计算scores
+#根据flattened_tag_indices的值寻找flattened_inputs中相应索引的值，非常巧妙的方法
+unary_scores1 = array_ops.gather(flattened_inputs, flattened_tag_indices)
+unary_scores1_numpy = unary_scores1.eval(session=sess)
+print("unary_scores1_numpy:", unary_scores1_numpy)
+unary_scores2 = array_ops.reshape(unary_scores1, [batch_size, max_seq_len])
+unary_scores2_numpy = unary_scores2.eval(session=sess)
+print("unary_scores2_numpy:", unary_scores2_numpy)
+unary_scores_end = math_ops.reduce_sum(unary_scores2, 1)
+unary_scores_end_numpy = unary_scores_end.eval(session=sess)
+print("unary_scores_end_numpy:", unary_scores_end_numpy)
