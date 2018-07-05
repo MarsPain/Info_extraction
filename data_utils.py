@@ -41,9 +41,13 @@ def read_data(dirname, dirname_txt):
                 f_txt.write(s)
 
 def process_data(dirname):
-    announce_train = "data/round1_train_20180518/增减持/announce.train"
-    announce_dev = "data/round1_train_20180518/增减持/announce.dev"
-    announce_test = "data/round1_train_20180518/增减持/announce.test"
+    # announce_train = "data/round1_train_20180518/增减持/announce.train"
+    # announce_dev = "data/round1_train_20180518/增减持/announce.dev"
+    # announce_test = "data/round1_train_20180518/增减持/announce.test"
+
+    announce_train = "data/round1_train_20180518/重大合同/announce.train"
+    announce_dev = "data/round1_train_20180518/重大合同/announce.dev"
+    announce_test = "data/round1_train_20180518/重大合同/announce.test"
     all_filenames = os.listdir(dirname)
     # print(all_filenames)
     num_filenames = len(all_filenames)
@@ -56,14 +60,13 @@ def process_data(dirname):
         with open(filename, 'r', encoding="utf-8") as f:
             announce_txt = announce_txt + f.read() + "\n"
             # print(announce_txt)
-            if count==6*(num_filenames//10):
+            if count==8*(num_filenames//10):
                 with open(announce_train, 'w', encoding="utf-8") as train:
                     train.write(announce_txt)
                     announce_txt = ""
-            elif count==8*(num_filenames//10):
+            elif count==num_filenames:
                 with open(announce_dev, 'w', encoding="utf-8") as dev:
                     dev.write(announce_txt)
-                    announce_txt = ""
             elif count==num_filenames:
                 with open(announce_test, 'w', encoding="utf-8") as test:
                     test.write(announce_txt)
@@ -162,10 +165,17 @@ def output_data(filename_ner, filename_result_zengjianchi):
                     else:
                         entity = ""
     with open(filename_result_zengjianchi, "w", encoding="utf-8") as f:
-        result.strip()
         f.write(result)
 
 if __name__ == "__main__":
-    read_data(dirname_hetong, dirname_txt_hetong)
+    # read_data(dirname_zengjianchi, dirname_txt_zengjianchi)
     # process_data(dirname_txt2_zengjianchi)
     # output_data(filename_predict_zengjianchi, filename_result_zengjianchi)
+
+    # read_data(dirname_hetong, dirname_txt_hetong)
+    # process_data(dirname_txt2_hetong)
+    # output_data(filename_predict_hetong, filename_result_hetong)
+
+    read_data(dirname_dingzeng, dirname_txt_dingzeng)
+    # process_data(dirname_txt2_dingzeng)
+    # output_data(filename_predict_dingzeng, filename_result_dingzeng)
