@@ -97,15 +97,14 @@ def unit_norm(s):
     pattern3 = re.compile(r"(\d{1,}.\d{3}.\d{3}.\d{3})|(\d{1,}.\d{3}.\d{3})|(\d{1,}.\d{3})|(\d+.\d+)")
     def replace3(matchobj):
         string = matchobj[0].replace(",", "")
-        string = string.replace(".", "")
         string = string.replace("，", "")
         return string
     s = re.sub(pattern3, replace3, s)
 
-    pattern4 = re.compile(r"(\d+万)")
+    pattern4 = re.compile(r"(\d+\.?\d+万)")
     def replace4(matchobj):
         num = matchobj[0][:-1]
-        new_num = int(num) * 10000
+        new_num = float(num) * 10000
         return str(new_num)
     s = re.sub(pattern4, replace4, s)
 
@@ -113,7 +112,7 @@ def unit_norm(s):
 
 
 def output_data(filename_ner, filename_result_zengjianchi):
-    result = ""
+    result = "公告id	股东全称	股东简称	变动截止日期	变动价格	变动数量	变动后持股数	变动后持股比例"
     with open(filename_ner, "r", encoding="utf-8") as f:
         flag = True
         temp_result = ["\t" for i in range(8)]   #用于保存一行结构化的实体
@@ -167,6 +166,6 @@ def output_data(filename_ner, filename_result_zengjianchi):
         f.write(result)
 
 if __name__ == "__main__":
-    # read_data(dirname_hetong, dirname_txt_hetong)
+    read_data(dirname_hetong, dirname_txt_hetong)
     # process_data(dirname_txt2_zengjianchi)
-    output_data(filename_predict_zengjianchi, filename_result_zengjianchi)
+    # output_data(filename_predict_zengjianchi, filename_result_zengjianchi)
