@@ -233,6 +233,7 @@ def evaluate_line(model_name, path_model_name, maps_path):
     tf_config.gpu_options.allow_growth = True
     # data_path = "data/round1_train_20180518"
     map_file = maps_path + "/maps.pkl"
+    print("map_file", map_file)
     with open(map_file, "rb") as f:
         char_to_id, id_to_char, tag_to_id, id_to_tag = pickle.load(f)
     # test_file = os.path.join("data/round1_train_20180518", model_name+"/announce.test") #本地测试用
@@ -241,6 +242,7 @@ def evaluate_line(model_name, path_model_name, maps_path):
     test_data = prepare_dataset(test_sentences, char_to_id, tag_to_id, FLAGS.lower)
     test_manager = BatchManager(test_data, 1)
     ckpt_path = "model_ckpt/" + model_name + "_ckpt"
+    print("ckpt_path", ckpt_path)
     with tf.Session(config=tf_config) as sess:
         model = create_model(sess, Model, ckpt_path, load_word2vec, config, id_to_char, logger)
 

@@ -46,6 +46,8 @@ def read_data(model_name, path_model_name):
             # print(s)
             s = unit_norm(s)    #对日期和比例等单位进行归一化处理
             s = "公告ID" + announce_id + s #将公告id(announce_id)加入每个相应文件的头部
+            if model_name == "dingzeng":
+                s = text_cut(s)
             # print(s)
             # count += 1
             # if count>50: break
@@ -248,6 +250,57 @@ def output_data(model_name, path_model_name):
                         entity = ""
     with open(filename_result, "w", encoding="utf-8") as f:
         f.write(result)
+
+def text_cut(s):
+    # s = "dhasjdh jklasd打开就好撒考虑到认购大开大合就卡死好dsdsadd认购的数据爱可登拉丝机贷款了"
+    # print(s)
+    index_list = []
+    length_s = len(s)
+    pattern = re.compile(r"(认购)")
+    matchobj = re.search(pattern, s, flags=0)
+    if matchobj:
+        index = matchobj.start()
+        index_list.append(Interval(index, index+2))
+    while matchobj:
+        last_index = index + 2
+        matchobj = re.search(pattern, s[last_index:], flags=0)
+        if not matchobj:
+            break
+        index = matchobj.start()
+        index = index + last_index
+        # index_list.append(Interval(index, index+2)) #原始区间
+        index_list.append(Interval(index-25, index+27)) #区间膨胀
+    index_list = merge(index_list)
+    new_s = ""
+    for interval in index_list:
+        start = interval.start
+        end = interval.end
+        if start < 0:
+            start = 0
+        if end > length_s-1:
+            end = length_s-1
+        new_s += s[start:end]
+    return new_s
+
+class Interval:
+    def __init__(self, s=0, e=0):
+        self.start = s
+        self.end = e
+
+def merge(intervals):
+    intervals.sort(key = lambda x:x.start)
+    len1 = len(intervals)
+    res = []
+    for i in range(len1):
+        if res == []:
+            res.append(intervals[i])
+        else:
+            len2 = len(res)
+            if res[len2-1].start <= intervals[i].start <= res[len2-1].end :
+                res[len2-1].end = max(intervals[i].end, res[len2-1].end)
+            else:
+                res.append(intervals[i])
+    return res
 
 if __name__ == "__main__":
     pass
