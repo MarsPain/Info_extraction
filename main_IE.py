@@ -1,6 +1,6 @@
 from data_utils_main import read_data, process_data, output_data
 from main import main_ner
-from match_by_row2 import match_by_row
+from match_by_row2 import match_by_row, sort_by_row
 import os
 
 # is_train = True
@@ -32,11 +32,11 @@ def main_IE():
         #对官方测试集进行预测
         test_path_model_name = os.path.join(test_path, model_name)
         # read_data(model_name, test_path_model_name)
+        # sort_by_row(model_name, test_path_model_name)
         # process_data(model_name, test_path_model_name, False)
         maps_path =  path_model_name   #训练时生成的字典的路径
         main_ner(False, model_name, test_path_model_name, maps_path)
         # output_data(model_name, test_path_model_name)
-
 
 if __name__ == "__main__":
     main_IE()

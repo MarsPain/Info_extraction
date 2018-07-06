@@ -235,7 +235,8 @@ def evaluate_line(model_name, path_model_name, maps_path):
     map_file = maps_path + "/maps.pkl"
     with open(map_file, "rb") as f:
         char_to_id, id_to_char, tag_to_id, id_to_tag = pickle.load(f)
-    test_file = os.path.join("data/round1_train_20180518", model_name+"/announce.test") #本地测试用
+    # test_file = os.path.join("data/round1_train_20180518", model_name+"/announce.test") #本地测试用
+    test_file = os.path.join(path_model_name, "announce.test")  #对官方测试集进行预测
     test_sentences = load_sentences(test_file, FLAGS.lower, FLAGS.zeros)
     test_data = prepare_dataset(test_sentences, char_to_id, tag_to_id, FLAGS.lower)
     test_manager = BatchManager(test_data, 1)

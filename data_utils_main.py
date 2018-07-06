@@ -34,6 +34,7 @@ def read_data(model_name, path_model_name):
             announce_id = filename[:-5]
         else:
             announce_id = filename
+        # print(announce_id)
         # print("announce_id:", announce_id)
         filename = os.path.join(dirname, filename)
         filename_txt = os.path.join(dirname_txt, announce_id+".txt")
@@ -56,35 +57,43 @@ def process_data(model_name, path_model_name, is_train):
         dirname = os.path.join(path_model_name, "txt2")
         if not os.path.exists(dirname):
             os.mkdir(dirname)
+        announce_train = os.path.join(path_model_name, "announce.train")
+        announce_dev = os.path.join(path_model_name, "announce.dev")
+        announce_test = os.path.join(path_model_name, "announce.test")
     else:
-        dirname = os.path.join(path_model_name, "txt")
-    announce_train = os.path.join(path_model_name, "announce.train")
-    announce_dev = os.path.join(path_model_name, "announce.dev")
-    announce_test = os.path.join(path_model_name, "announce.test")
+        dirname = os.path.join(path_model_name, "txt2")
+        announce_test = os.path.join(path_model_name, "announce.test")
     # print("===========Yes==============")
     all_filenames = os.listdir(dirname)
     # print(all_filenames)
     num_filenames = len(all_filenames)
-    print(num_filenames)
+    # print(num_filenames)
     # num_filenames = 20
     count = 0
     announce_txt = ""
     for filename in all_filenames:
         filename = os.path.join(dirname, filename)
         count += 1
-        with open(filename, 'r', encoding="utf-8") as f:
-            announce_txt = announce_txt + f.read() + "\n"
-            # print(announce_txt)
-            if count==8*(num_filenames//10):
-                with open(announce_train, 'w', encoding="utf-8") as train:
-                    print("===========Yes==============")
-                    train.write(announce_txt)
-                    announce_txt = ""
-            elif count==num_filenames:
-                with open(announce_dev, 'w', encoding="utf-8") as dev:
-                    dev.write(announce_txt)
-                with open(announce_test, 'w', encoding="utf-8") as test:
-                    test.write(announce_txt)
+        if is_train:
+            with open(filename, 'r', encoding="utf-8") as f:
+                announce_txt = announce_txt + f.read() + "\n"
+                # print(announce_txt)
+                if count==8*(num_filenames//10):
+                    with open(announce_train, 'w', encoding="utf-8") as train:
+                        print("===========Yes==============")
+                        train.write(announce_txt)
+                        announce_txt = ""
+                elif count==num_filenames:
+                    with open(announce_dev, 'w', encoding="utf-8") as dev:
+                        dev.write(announce_txt)
+                    with open(announce_test, 'w', encoding="utf-8") as test:
+                        test.write(announce_txt)
+        else:
+            with open(filename, 'r', encoding="utf-8") as f:
+                announce_txt = announce_txt + f.read() + "\n"
+                if count==num_filenames:
+                    with open(announce_test, 'w', encoding="utf-8") as test:
+                        test.write(announce_txt)
 
 def unit_norm(s):
     pattern1 = re.compile(r"(\d{1,2}月)|(\d{1,2}日)")

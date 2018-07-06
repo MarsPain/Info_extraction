@@ -28,9 +28,8 @@ def match_by_row(model_name, path_model_name):
     # txt_dir = 'dingzeng/'#'' 'hetong/'
     # train_dir = 'dingzeng/dingzeng.train'   #'zengjianchi.train' 'hetong/hetong.train'
     # data_path = "data/round1_train_20180518"
-    print(path_model_name)
-    txt_dir = "data/round1_train_20180518/" + model_name + "/"
-
+    # print(path_model_name)
+    txt_dir = "data/round1_train_20180518/" + model_name + "/"  #训练时的两个路径路径
     train_dir = os.path.join(path_model_name, model_name+".train")
     print(train_dir)
     df = pd.read_csv(train_dir, encoding='utf8', sep='\t', header=None)
@@ -94,6 +93,26 @@ def match_by_row(model_name, path_model_name):
 
     write_tag(txt_dir+'txt2/t_' + str(num) + '.txt', char_list, tag_list)
     pass
+
+def sort_by_row(model_name, test_path_model_name):
+    txt_dir = os.path.join(test_path_model_name, "txt")
+    txt2_dir = os.path.join(test_path_model_name, "txt2")
+    if not os.path.exists(txt2_dir):
+        os.mkdir(txt2_dir)
+    for filename in os.listdir(txt_dir):
+        announce_id = filename[:-4]
+        filename2 = "t_" + announce_id + ".txt"
+        filename = os.path.join(txt_dir, filename)
+        filename2 = os.path.join(txt2_dir, filename2)
+        with open(filename, "r", encoding="utf-8") as f:
+            string = f.read()
+            # string = string.replace(" ", ""); string = string.replace("\n", "")
+            string2 = ""
+            for s in string:
+                string2 = string2 + s + "\t" + "O" + "\n"
+                # string2 = string2 + "\t" + "O" + "\n" + s
+            with open(filename2, "w", encoding="utf-8") as f2:
+                f2.write(string2)
 
 
 
