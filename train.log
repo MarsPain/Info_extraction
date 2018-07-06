@@ -103,3 +103,21 @@
 2018-07-06 12:21:47,080 - train.log - INFO - Created model with fresh parameters.
 2018-07-06 12:22:17,318 - train.log - INFO - Reading model parameters from model_ckpt/zengjianchi_ckpt\ner.ckpt
 2018-07-06 12:22:17,737 - train.log - INFO - evaluate:zengjianchi
+2018-07-06 15:43:41,459 - train.log - INFO - Reading model parameters from model_ckpt/zengjianchi_ckpt\ner.ckpt
+2018-07-06 15:43:41,898 - train.log - INFO - evaluate:zengjianchi
+2018-07-06 15:46:52,555 - train.log - INFO - processed 512051 tokens with 8371 phrases; found: 8560 phrases; correct: 7300.
+
+2018-07-06 15:46:52,555 - train.log - INFO - accuracy:  97.03%; precision:  85.28%; recall:  87.21%; FB1:  86.23
+
+2018-07-06 15:46:52,555 - train.log - INFO -                 1: precision: 100.00%; recall: 100.00%; FB1: 100.00  600
+
+2018-07-06 15:46:52,555 - train.log - INFO -                 2: precision:  85.31%; recall:  77.52%; FB1:  81.23  1035
+
+2018-07-06 15:46:52,555 - train.log - INFO -                 3: precision:  89.96%; recall:  89.31%; FB1:  89.63  3893
+
+2018-07-06 15:46:52,555 - train.log - INFO -                 4: precision:  75.52%; recall:  87.82%; FB1:  81.21  1977
+
+2018-07-06 15:46:52,555 - train.log - INFO -                 5: precision:  87.97%; recall:  78.90%; FB1:  83.19  765
+
+2018-07-06 15:46:52,555 - train.log - INFO -                 6: precision:  51.38%; recall:  94.30%; FB1:  66.52  290
+

@@ -24,11 +24,16 @@ import re
 def read_data(model_name, path_model_name):
     dirname = os.path.join(path_model_name, "html")
     dirname_txt = os.path.join(path_model_name, "txt")
+    if not os.path.exists(dirname_txt):
+        os.mkdir(dirname_txt)
     h2t = html2text.HTML2Text() #初始化html2text工具
     h2t.ignore_links = True #表示忽略html页面中的链接
     count = 0
     for filename in os.listdir(dirname):
-        announce_id = filename[:-5]
+        if filename[-4:] == "html":
+            announce_id = filename[:-5]
+        else:
+            announce_id = filename
         # print("announce_id:", announce_id)
         filename = os.path.join(dirname, filename)
         filename_txt = os.path.join(dirname_txt, announce_id+".txt")
@@ -37,6 +42,7 @@ def read_data(model_name, path_model_name):
             s = h2t.handle(f)   #读取为txt格式的string
             s = s.replace(" ", ""); s = s.replace("\n", "") #去除空格和换行符
             s = re.sub(r"(\[image\].+\))", " ", s)  #去除图像数据的影响
+            # print(s)
             s = unit_norm(s)    #对日期和比例等单位进行归一化处理
             s = "公告ID" + announce_id + s #将公告id(announce_id)加入每个相应文件的头部
             # print(s)
@@ -47,6 +53,8 @@ def read_data(model_name, path_model_name):
 
 def process_data(model_name, path_model_name):
     dirname = os.path.join(path_model_name, "txt2")
+    if not os.path.exists(dirname):
+        os.mkdir(dirname)
     announce_train = os.path.join(path_model_name, "announce.train")
     announce_dev = os.path.join(path_model_name, "announce.dev")
     announce_test = os.path.join(path_model_name, "announce.test")
@@ -75,9 +83,12 @@ def process_data(model_name, path_model_name):
 def unit_norm(s):
     pattern1 = re.compile(r"(\d{1,2}月)|(\d{1,2}日)")
     def replace1(matchobj):
-        if len(matchobj[0]) == 2:
+        matchobj = matchobj.group(0)
+        # if len(matchobj[0]) == 2:
+        if len(matchobj) == 2:
             # print(type(matchobj[0]), matchobj[0])
-            matchobj = "0" + matchobj[0]
+            # matchobj = "0" + matchobj[0]
+            matchobj = "0" + matchobj
             # print(matchobj)
             return matchobj
         else:
@@ -87,12 +98,22 @@ def unit_norm(s):
     # s = "他的生日是2016年12月12日，他在2017年8月7日至9月10日去大学了，有50%的学生"  #测试pattern2
     pattern2 = re.compile(r"(\d{4}年\d{1,2}月\d{1,2}日-\d{1,2}月\d{1,2}日)|(\d{4}年\d{1,2}月\d{1,2}日至\d{1,2}月\d{1,2}日)|(\d{4}年\d{1,2}月\d{1,2}日)|(\d+\.?\d+%)")
     def replace2(matchobj):
-        if matchobj[0][-1] == "%":
-            value = 0.01*float(matchobj[0][:-1])
-            matchobj = re.sub(matchobj[0], str(value), matchobj[0])
+        matchobj = matchobj.group(0)
+        # if matchobj[0][-1] == "%":
+        #     value = 0.01*float(matchobj[0][:-1])
+        #     matchobj = re.sub(matchobj[0], str(value), matchobj[0])
+        if matchobj[-1] == "%":
+            value = 0.01*float(matchobj[:-1])
+            matchobj = re.sub(matchobj, str(value), matchobj)
+        # else:
+        #     year = matchobj[0][:4]
+        #     matchobj = re.sub("至", "至"+year+"年", matchobj[0])
+        #     matchobj = re.sub("-", "至"+year+"年", matchobj)
+        #     matchobj = re.sub("年|月", "-", matchobj)
+        #     matchobj = re.sub("日", "", matchobj)
         else:
-            year = matchobj[0][:4]
-            matchobj = re.sub("至", "至"+year+"年", matchobj[0])
+            year = matchobj[:4]
+            matchobj = re.sub("至", "至"+year+"年", matchobj)
             matchobj = re.sub("-", "至"+year+"年", matchobj)
             matchobj = re.sub("年|月", "-", matchobj)
             matchobj = re.sub("日", "", matchobj)
@@ -101,14 +122,18 @@ def unit_norm(s):
 
     pattern3 = re.compile(r"(\d{1,}.\d{3}.\d{3}.\d{3})|(\d{1,}.\d{3}.\d{3})|(\d{1,}.\d{3})|(\d+.\d+)")
     def replace3(matchobj):
-        string = matchobj[0].replace(",", "")
+        matchobj = matchobj.group(0)
+        # string = matchobj[0].replace(",", "")
+        string = matchobj.replace(",", "")
         string = string.replace("，", "")
         return string
     s = re.sub(pattern3, replace3, s)
 
     pattern4 = re.compile(r"(\d+\.?\d+万)")
     def replace4(matchobj):
-        num = matchobj[0][:-1]
+        matchobj = matchobj.group(0)
+        # num = matchobj[0][:-1]
+        num = matchobj[:-1]
         new_num = float(num) * 10000
         return str(new_num)
     s = re.sub(pattern4, replace4, s)

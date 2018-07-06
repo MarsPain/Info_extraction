@@ -23,18 +23,18 @@ def main_IE():
         #将被标注的文件分割成train、dev、test三个文件
         # process_data(model_name, path_model_name)
         #对训练集进行训练
-        main_ner(True, model_name, path_model_name)
+        # main_ner(True, model_name, path_model_name)
         #对验证集进行预测并输出预测结果
         # main_ner(False, model_name, path_model_name)  #不要轻易使用该函数，会覆盖result中的预测
         #将上一步输出的命名实体识别结果进行结构化的输出
         # output_data(model_name, path_model_name)
 
         #对官方测试集进行预测
-        test_path_model_name = os.path.join(path, model_name)
+        test_path_model_name = os.path.join(test_path, model_name)
         read_data(model_name, test_path_model_name)
-        process_data(model_name, test_path_model_name)
-        main_ner(False, model_name, test_path_model_name)
-        output_data(model_name, test_path_model_name)
+        # process_data(model_name, test_path_model_name)
+        # main_ner(False, model_name, test_path_model_name)
+        # output_data(model_name, test_path_model_name)
 
 
 if __name__ == "__main__":
