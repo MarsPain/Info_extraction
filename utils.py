@@ -79,10 +79,10 @@ def make_path(params):
     """
     Make folders for training and evaluation
     """
-    if not os.path.isdir(params.result_path):
-        os.makedirs(params.result_path)
-    if not os.path.isdir(params.ckpt_path):
-        os.makedirs(params.ckpt_path)
+    # if not os.path.isdir(params.result_path):
+    #     os.makedirs(params.result_path)
+    # if not os.path.isdir(params.ckpt_path):
+    #     os.makedirs(params.ckpt_path)
     if not os.path.isdir("log"):
         os.makedirs("log")
 
@@ -98,14 +98,14 @@ def clean(params):
     if os.path.isfile(params.map_file):
         os.remove(params.map_file)
 
-    if os.path.isdir(params.ckpt_path):
-        shutil.rmtree(params.ckpt_path)
+    # if os.path.isdir(params.ckpt_path):
+    #     shutil.rmtree(params.ckpt_path)
 
     if os.path.isdir(params.summary_path):
         shutil.rmtree(params.summary_path)
 
-    if os.path.isdir(params.result_path):
-        shutil.rmtree(params.result_path)
+    # if os.path.isdir(params.result_path):
+    #     shutil.rmtree(params.result_path)
 
     if os.path.isdir("log"):
         shutil.rmtree("log")

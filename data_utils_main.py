@@ -116,7 +116,7 @@ def unit_norm(s):
     return s
 
 
-def output_data(model_name):
+def output_data(model_name, path_model_name):
     filename_predict = os.path.join("result", model_name+"_predict.utf8")
     filename_result = os.path.join("result", model_name+".txt")
     if model_name == "zengjianchi":
@@ -125,6 +125,8 @@ def output_data(model_name):
         result = "公告id	甲方	乙方	项目名称	合同名称	合同金额上限	合同金额下限	联合体成员"
     elif model_name == "dingzeng":
         result = "公告id  增发对象    增发数量	增发金额	锁定期	认购方式"
+    elif model_name == "test":
+        result = ""
     with open(filename_predict, "r", encoding="utf-8") as f:
         flag = True
         temp_result = ["\t" for i in range(8)]   #用于保存一行结构化的实体

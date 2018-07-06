@@ -41,14 +41,14 @@ flags.DEFINE_boolean("lower",       True,       "Wither lower case")
 
 flags.DEFINE_integer("max_epoch",   20,        "maximum training epochs")
 flags.DEFINE_integer("steps_check", 100,        "steps per checkpoint")
-flags.DEFINE_string("ckpt_path",    "ckpt",      "Path to save model")
+# flags.DEFINE_string("ckpt_path",    "ckpt",      "Path to save model")
 flags.DEFINE_string("summary_path", "summary",      "Path to store summaries")
 flags.DEFINE_string("log_file",     "train.log",    "File for log")
 flags.DEFINE_string("map_file",     "maps.pkl",     "file for maps")
 flags.DEFINE_string("vocab_file",   "vocab.json",   "File for vocab")
 flags.DEFINE_string("config_file",  "config_file",  "File for config")
 flags.DEFINE_string("script",       "conlleval",    "evaluation script")
-flags.DEFINE_string("result_path",  "result",       "Path for results")
+# flags.DEFINE_string("result_path",  "result",       "Path for results")
 flags.DEFINE_string("emb_file",     "wiki_100.utf8", "Path for pre_trained embedding")
 #用中医证候数据集example_medicine_all进行训练和测试
 # flags.DEFINE_string("train_file",   os.path.join("data", "example_medicine_all.train"),  "Path for train data")
@@ -91,24 +91,30 @@ def config_model(char_to_id, tag_to_id):
 
 def evaluate(sess, model, name, data, id_to_tag, logger):
     logger.info("evaluate:{}".format(name))
+    result_path = "result"
     ner_results = model.evaluate(sess, data, id_to_tag)
-    eval_lines = test_ner(ner_results, FLAGS.result_path, name)
+    eval_lines = test_ner(ner_results, result_path, name)
     for line in eval_lines:
         logger.info(line)
     f1 = float(eval_lines[1].strip().split()[-1])
+    best_test_f1 = model.best_dev_f1.eval()
+    if f1 > best_test_f1:
+        tf.assign(model.best_dev_f1, f1).eval()
+        logger.info("new best dev f1 score:{:>.3f}".format(f1))
+    return f1 > best_test_f1
 
-    if name == "dev":
-        best_test_f1 = model.best_dev_f1.eval()
-        if f1 > best_test_f1:
-            tf.assign(model.best_dev_f1, f1).eval()
-            logger.info("new best dev f1 score:{:>.3f}".format(f1))
-        return f1 > best_test_f1
-    elif name == "test":
-        best_test_f1 = model.best_test_f1.eval()
-        if f1 > best_test_f1:
-            tf.assign(model.best_test_f1, f1).eval()
-            logger.info("new best test f1 score:{:>.3f}".format(f1))
-        return f1 > best_test_f1
+    # if name == "dev":
+    #     best_test_f1 = model.best_dev_f1.eval()
+    #     if f1 > best_test_f1:
+    #         tf.assign(model.best_dev_f1, f1).eval()
+    #         logger.info("new best dev f1 score:{:>.3f}".format(f1))
+    #     return f1 > best_test_f1
+    # elif name == "test":
+    #     best_test_f1 = model.best_test_f1.eval()
+    #     if f1 > best_test_f1:
+    #         tf.assign(model.best_test_f1, f1).eval()
+    #         logger.info("new best test f1 score:{:>.3f}".format(f1))
+    #     return f1 > best_test_f1
 
 
 def train(model_name, path_model_name):
