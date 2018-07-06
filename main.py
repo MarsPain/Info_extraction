@@ -225,14 +225,14 @@ def train(model_name, path_model_name):
             # evaluate(sess, model, "test", test_manager, id_to_tag, logger)
 
 
-def evaluate_line(model_name, path_model_name):
+def evaluate_line(model_name, path_model_name, maps_path):
     config = load_config(FLAGS.config_file)
     logger = get_logger(FLAGS.log_file)
     # limit GPU memory
     tf_config = tf.ConfigProto()
     tf_config.gpu_options.allow_growth = True
     # data_path = "data/round1_train_20180518"
-    map_file = path_model_name + "/maps.pkl"
+    map_file = maps_path + "/maps.pkl"
     with open(map_file, "rb") as f:
         char_to_id, id_to_char, tag_to_id, id_to_tag = pickle.load(f)
     test_file = os.path.join("data/round1_train_20180518", model_name+"/announce.test") #本地测试用
@@ -269,12 +269,12 @@ def main(_):
     else:
         evaluate_line()
 
-def main_ner(is_train, model_name, path_model_name):
+def main_ner(is_train, model_name, path_model_name, maps_path):
     if is_train:
         clean(FLAGS)
         train(model_name, path_model_name)
     else:
-        evaluate_line(model_name, path_model_name)
+        evaluate_line(model_name, path_model_name, maps_path)
 
 
 if __name__ == "__main__":

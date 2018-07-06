@@ -21,7 +21,7 @@ def main_IE():
         #用最大正向匹配进行自动标注
         # match_by_row(model_name, path_model_name)
         #将被标注的文件分割成train、dev、test三个文件
-        # process_data(model_name, path_model_name)
+        # process_data(model_name, path_model_name, True)
         #对训练集进行训练
         # main_ner(True, model_name, path_model_name)
         #对验证集进行预测并输出预测结果
@@ -31,9 +31,10 @@ def main_IE():
 
         #对官方测试集进行预测
         test_path_model_name = os.path.join(test_path, model_name)
-        read_data(model_name, test_path_model_name)
-        # process_data(model_name, test_path_model_name)
-        # main_ner(False, model_name, test_path_model_name)
+        # read_data(model_name, test_path_model_name)
+        # process_data(model_name, test_path_model_name, False)
+        maps_path =  path_model_name   #训练时生成的字典的路径
+        main_ner(False, model_name, test_path_model_name, maps_path)
         # output_data(model_name, test_path_model_name)
 
 

@@ -51,16 +51,21 @@ def read_data(model_name, path_model_name):
             with open(filename_txt, "w", encoding="utf-8") as f_txt:
                 f_txt.write(s)
 
-def process_data(model_name, path_model_name):
-    dirname = os.path.join(path_model_name, "txt2")
-    if not os.path.exists(dirname):
-        os.mkdir(dirname)
+def process_data(model_name, path_model_name, is_train):
+    if is_train:
+        dirname = os.path.join(path_model_name, "txt2")
+        if not os.path.exists(dirname):
+            os.mkdir(dirname)
+    else:
+        dirname = os.path.join(path_model_name, "txt")
     announce_train = os.path.join(path_model_name, "announce.train")
     announce_dev = os.path.join(path_model_name, "announce.dev")
     announce_test = os.path.join(path_model_name, "announce.test")
+    # print("===========Yes==============")
     all_filenames = os.listdir(dirname)
     # print(all_filenames)
     num_filenames = len(all_filenames)
+    print(num_filenames)
     # num_filenames = 20
     count = 0
     announce_txt = ""
@@ -72,6 +77,7 @@ def process_data(model_name, path_model_name):
             # print(announce_txt)
             if count==8*(num_filenames//10):
                 with open(announce_train, 'w', encoding="utf-8") as train:
+                    print("===========Yes==============")
                     train.write(announce_txt)
                     announce_txt = ""
             elif count==num_filenames:
