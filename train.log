@@ -100,3 +100,6 @@
 
 2018-07-06 08:27:07,394 - train.log - INFO -                 3: precision:  60.10%; recall:  55.72%; FB1:  57.83  1045
 
+2018-07-06 12:21:47,080 - train.log - INFO - Created model with fresh parameters.
+2018-07-06 12:22:17,318 - train.log - INFO - Reading model parameters from model_ckpt/zengjianchi_ckpt\ner.ckpt
+2018-07-06 12:22:17,737 - train.log - INFO - evaluate:zengjianchi
