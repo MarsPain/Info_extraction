@@ -28,8 +28,11 @@ def match_by_row(model_name, path_model_name):
     # txt_dir = 'dingzeng/'#'' 'hetong/'
     # train_dir = 'dingzeng/dingzeng.train'   #'zengjianchi.train' 'hetong/hetong.train'
     # data_path = "data/round1_train_20180518"
-    txt_dir = os.path.join(path_model_name, "/")
-    train_dir = os.path.join(path_model_name, "/"+model_name+".train")
+    print(path_model_name)
+    txt_dir = "data/round1_train_20180518/" + model_name + "/"
+
+    train_dir = os.path.join(path_model_name, model_name+".train")
+    print(train_dir)
     df = pd.read_csv(train_dir, encoding='utf8', sep='\t', header=None)
     df = df.replace(np.nan, '')
     if model_name == "dingzeng":
