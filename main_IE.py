@@ -9,8 +9,8 @@ import os
 path = "data/round1_train_20180518"
 
 def main_IE():
-    # model_names = ["zengjianchi", "hetong", "dingzeng"]
-    model_names = ["zengjianchi"]
+    model_names = ["zengjianchi", "hetong", "dingzeng"]
+    # model_names = ["zengjianchi"]
     for model_name in model_names:
         path_model_name = os.path.join(path, model_name)
         pass
