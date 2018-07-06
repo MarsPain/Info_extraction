@@ -1,7 +1,7 @@
 {
-    "num_chars": 3442,
+    "num_chars": 4716,
     "char_dim": 100,
-    "num_tags": 19,
+    "num_tags": 17,
     "seg_dim": 0,
     "lstm_dim": 100,
     "batch_size": 8,

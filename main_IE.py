@@ -11,7 +11,7 @@ test_path = "./test_data"
 
 def main_IE():
     # model_names = ["zengjianchi", "hetong", "dingzeng"]
-    model_names = ["hetong"]
+    model_names = ["dingzeng"]
     for model_name in model_names:
         #训练和验证
         path_model_name = os.path.join(path, model_name)
@@ -24,7 +24,7 @@ def main_IE():
         #将被标注的文件分割成train、dev、test三个文件
         # process_data(model_name, path_model_name, True)
         #对训练集进行训练
-        # main_ner(True, model_name, path_model_name, maps_path)
+        main_ner(True, model_name, path_model_name, maps_path)
         #对验证集进行预测并输出预测结果
         # main_ner(False, model_name, path_model_name)  #不要轻易使用该函数，会覆盖result中的预测
         #将上一步输出的命名实体识别结果进行结构化的输出
@@ -35,9 +35,9 @@ def main_IE():
         # read_data(model_name, test_path_model_name)
         # sort_by_row(model_name, test_path_model_name)
         # process_data(model_name, test_path_model_name, False)
-        maps_path =  path_model_name   #训练时生成的字典的路径
+        maps_path = path_model_name   #训练时生成的字典的路径
         main_ner(False, model_name, test_path_model_name, maps_path)
-        # output_data(model_name, test_path_model_name)
+        output_data(model_name, test_path_model_name)
 
 if __name__ == "__main__":
     main_IE()

@@ -29,6 +29,9 @@ def match_by_row(model_name, path_model_name):
     # train_dir = 'dingzeng/dingzeng.train'   #'zengjianchi.train' 'hetong/hetong.train'
     # data_path = "data/round1_train_20180518"
     # print(path_model_name)
+    txt2_dir = os.path.join(path_model_name, "txt2")
+    if not os.path.exists(txt2_dir):
+        os.mkdir(txt2_dir)
     txt_dir = "data/round1_train_20180518/" + model_name + "/"  #训练时的两个路径路径
     train_dir = os.path.join(path_model_name, model_name+".train")
     print(train_dir)

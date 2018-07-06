@@ -190,3 +190,22 @@
 
 2018-07-06 21:27:58,989 - train.log - INFO - Reading model parameters from model_ckpt/hetong_ckpt\ner.ckpt
 2018-07-06 21:27:59,410 - train.log - INFO - evaluate:hetong
+2018-07-06 21:34:41,924 - train.log - INFO - processed 1079023 tokens with 0 phrases; found: 7472 phrases; correct: 0.
+
+2018-07-06 21:34:41,925 - train.log - INFO - accuracy:  91.87%; precision:   0.00%; recall:   0.00%; FB1:   0.00
+
+2018-07-06 21:34:41,925 - train.log - INFO -                 1: precision:   0.00%; recall:   0.00%; FB1:   0.00  944
+
+2018-07-06 21:34:41,925 - train.log - INFO -                 2: precision:   0.00%; recall:   0.00%; FB1:   0.00  2038
+
+2018-07-06 21:34:41,925 - train.log - INFO -                 3: precision:   0.00%; recall:   0.00%; FB1:   0.00  2712
+
+2018-07-06 21:34:41,925 - train.log - INFO -                 4: precision:   0.00%; recall:   0.00%; FB1:   0.00  428
+
+2018-07-06 21:34:41,925 - train.log - INFO -                 5: precision:   0.00%; recall:   0.00%; FB1:   0.00  390
+
+2018-07-06 21:34:41,925 - train.log - INFO -                 6: precision:   0.00%; recall:   0.00%; FB1:   0.00  960
+
+2018-07-06 21:39:16,659 - train.log - INFO - Created model with fresh parameters.
+2018-07-06 21:39:18,147 - train.log - INFO - Load pre-trained embedding.
+2018-07-06 21:39:18,147 - train.log - INFO - evaluate:dingzeng
