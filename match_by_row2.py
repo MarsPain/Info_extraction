@@ -32,7 +32,8 @@ def match_by_row(model_name, path_model_name):
     train_dir = os.path.join(path_model_name, "/"+model_name+".train")
     df = pd.read_csv(train_dir, encoding='utf8', sep='\t', header=None)
     df = df.replace(np.nan, '')
-    df = df.drop(2,axis=1)
+    if model_name == "dingzeng":
+        df = df.drop(2,axis=1)
     global tags
     tags = []
     for i in [1,2,3,4,6,5,7,8]:
