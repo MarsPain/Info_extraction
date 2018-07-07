@@ -239,15 +239,27 @@ def output_data(model_name, path_model_name):
                     #         temp2_result = []
 
                     #下面的方法是简单粗暴地出现重复的公司名称时就认为是另一条结构化数据
-                    elif int(predict_type) == 2 and temp_result[1] != "\t":
-                        announce_id = temp_result[0]
+                    # elif int(predict_type) == 2 and temp_result[1] != "\t":
+                    #     announce_id = temp_result[0]
+                    #     result = result + "\t".join(temp_result) + "\n"
+                    #     temp_result = ["\t" for i in range(8)]
+                    #     temp_result[0] = announce_id
+                    #     temp_result[int(predict_type)-1] = entity
+                    #     entity = ""
+                    # else:
+                    #     entity = ""
+
+                    #下面的方法是简单粗暴地认为出现重复位置的实体就认为是另一条结构化数据,
+                    # 出现之后直接换一行，而且从上一个结构化信息继承他缺失的数据。
+                    elif temp_result[int(predict_type)-1] != "\t":
+                        new_temp_result = ["\t" for i in range(8)]
+                        for i in range(int(predict_type)-1):
+                            new_temp_result[i] = temp_result[i]
+                        new_temp_result[int(predict_type)-1] = entity
                         result = result + "\t".join(temp_result) + "\n"
-                        temp_result = ["\t" for i in range(8)]
-                        temp_result[0] = announce_id
-                        temp_result[int(predict_type)-1] = entity
-                        entity = ""
-                    else:
-                        entity = ""
+                        temp_result = new_temp_result
+                        new_temp_result = ["\t" for i in range(8)]
+
     with open(filename_result, "w", encoding="utf-8") as f:
         f.write(result)
 

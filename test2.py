@@ -4,23 +4,23 @@
 # print(a[2:-2])
 
 import re
-# pattern = re.compile(r"\d{4}"+"年"+r"\d{1,2}"+"月"+r"\d{1,2}"+"日")
-# s = "他的生日是2016年12月12日，他在2017年8月7日去大学了"
-# print(re.findall(pattern,s))
-# def test(matchobj):
-#     #以下方法不知道为什么不再适用了
-#     # print(matchobj)
-#     # print(type(matchobj[0]))
-#     # matchobj = re.sub("年|月", "-", matchobj[0])
-#     # matchobj = re.sub("日", "", matchobj)
-#     # return matchobj
-#     #新的方法
-#     matchobj = matchobj.group(0)
-#     matchobj = re.sub("年|月", "-", matchobj)
-#     matchobj = re.sub("日", "", matchobj)
-#     return matchobj
-# s = re.sub(pattern, test, s)
-# print(s)
+pattern = re.compile(r"\d{4}"+"年"+r"\d{1,2}"+"月"+r"\d{1,2}"+"日")
+s = "他的生日是2016年12月12日，他在2017年8月7日去大学了集中竞价	2018年2月5日d s"
+print(re.findall(pattern,s))
+def test(matchobj):
+    #以下方法不知道为什么不再适用了
+    # print(matchobj)
+    # print(type(matchobj[0]))
+    # matchobj = re.sub("年|月", "-", matchobj[0])
+    # matchobj = re.sub("日", "", matchobj)
+    # return matchobj
+    #新的方法
+    matchobj = matchobj.group(0)
+    matchobj = re.sub("年|月", "-", matchobj)
+    matchobj = re.sub("日", "", matchobj)
+    return matchobj
+s = re.sub(pattern, test, s)
+print(s)
 
 # pattern2 = re.compile(r"(\d{4}年\d{1,2}月\d{1,2}日至\d{1,2}月\d{1,2}日)")
 # s = "他的生日是2016年12月12日，他在2017年8月7日至9月10日去大学了"
