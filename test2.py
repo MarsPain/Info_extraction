@@ -171,49 +171,49 @@ import re
 # print(matchobj.start())
 # print(re.search(pattern, s[8+2:], flags=0).start())
 
-s = "大厦的考拉数据库认购等级考认购试拉道具第三点认购打开的认购的就是卡德加了"
-class Interval:
-    def __init__(self, s=0, e=0):
-        self.start = s
-        self.end = e
-index_list = []
-pattern = re.compile(r"(认购)")
-matchobj = re.search(pattern, s, flags=0)
-index = matchobj.start()
-if index:
-    # print(1)
-    index_list.append(Interval(index, index+2))
-while index>0:
-    # print(1)
-    last_index = index + 2
-    print(last_index)
-    print(s[last_index+2:])
-    matchobj = re.search(pattern, s[last_index:], flags=0)
-    if not matchobj:
-        break
-    index = matchobj.start()
-    print(index)
-    index = index + last_index
-    index_list.append(Interval(index, index+2))
-    index_list.append(Interval(index-2, index+4))
-for interval in index_list:
-    print(interval.start, interval.end)
-
-def merge(intervals):
-    intervals.sort(key = lambda x:x.start)
-    len1 = len(intervals)
-    res = []
-    for i in range(len1):
-        if res == []:
-            res.append(intervals[i])
-        else:
-            len2 = len(res)
-            if res[len2-1].start <= intervals[i].start <= res[len2-1].end :
-                res[len2-1].end = max(intervals[i].end, res[len2-1].end)
-            else:
-                res.append(intervals[i])
-    return res
-
-new_interval_list = merge(index_list)
-for interval in new_interval_list:
-    print(interval.start, interval.end)
+# s = "大厦的考拉数据库认购等级考认购试拉道具第三点认购打开的认购的就是卡德加了"
+# class Interval:
+#     def __init__(self, s=0, e=0):
+#         self.start = s
+#         self.end = e
+# index_list = []
+# pattern = re.compile(r"(认购)")
+# matchobj = re.search(pattern, s, flags=0)
+# index = matchobj.start()
+# if index:
+#     # print(1)
+#     index_list.append(Interval(index, index+2))
+# while index>0:
+#     # print(1)
+#     last_index = index + 2
+#     print(last_index)
+#     print(s[last_index+2:])
+#     matchobj = re.search(pattern, s[last_index:], flags=0)
+#     if not matchobj:
+#         break
+#     index = matchobj.start()
+#     print(index)
+#     index = index + last_index
+#     index_list.append(Interval(index, index+2))
+#     index_list.append(Interval(index-2, index+4))
+# for interval in index_list:
+#     print(interval.start, interval.end)
+#
+# def merge(intervals):
+#     intervals.sort(key = lambda x:x.start)
+#     len1 = len(intervals)
+#     res = []
+#     for i in range(len1):
+#         if res == []:
+#             res.append(intervals[i])
+#         else:
+#             len2 = len(res)
+#             if res[len2-1].start <= intervals[i].start <= res[len2-1].end :
+#                 res[len2-1].end = max(intervals[i].end, res[len2-1].end)
+#             else:
+#                 res.append(intervals[i])
+#     return res
+#
+# new_interval_list = merge(index_list)
+# for interval in new_interval_list:
+#     print(interval.start, interval.end)

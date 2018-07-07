@@ -271,7 +271,7 @@ def text_cut(s):
         index = matchobj.start()
         index = index + last_index
         # index_list.append(Interval(index, index+2)) #原始区间
-        index_list.append(Interval(index-25, index+27)) #区间膨胀
+        index_list.append(Interval(index-1000, index+1000)) #区间膨胀
     index_list = merge(index_list)
     new_s = ""
     for interval in index_list:
