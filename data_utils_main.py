@@ -255,6 +255,8 @@ def text_cut(s):
     # s = "dhasjdh jklasd打开就好撒考虑到认购大开大合就卡死好dsdsadd认购的数据爱可登拉丝机贷款了"
     # print(s)
     index_list = []
+    interval_id = Interval(0, 20)
+    index_list.append(interval_id)
     length_s = len(s)
     pattern = re.compile(r"(认购)")
     matchobj = re.search(pattern, s, flags=0)
