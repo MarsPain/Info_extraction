@@ -250,7 +250,7 @@ def output_data(model_name, path_model_name):
                     #     entity = ""
 
                     #下面的方法是简单粗暴地认为出现重复位置的实体就认为是另一条结构化数据,
-                    # 出现之后直接换一行，而且从上一个结构化信息继承他缺失的数据。
+                    # 出现之后直接换一行，而且从上一个结构化信息继承新一行缺失的数据（这种确实大概率是因为共享同样的实体）。
                     elif temp_result[int(predict_type)-1] != "\t":
                         new_temp_result = ["\t" for i in range(8)]
                         for i in range(int(predict_type)-1):

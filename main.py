@@ -161,7 +161,7 @@ def train(model_name, path_model_name):
         print("tag_to_id", tag_to_id, len(tag_to_id))
         with open(map_file, "wb") as f:
             pickle.dump([char_to_id, id_to_char, tag_to_id, id_to_tag], f)
-    else:
+    else:   #由于如果maps.pkl已存在就直接调用，如果数据出现了大的改变就需要删除重新dump，否则可能出错
         with open(map_file, "rb") as f:
             char_to_id, id_to_char, tag_to_id, id_to_tag = pickle.load(f)
 
