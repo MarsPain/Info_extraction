@@ -259,6 +259,7 @@ def output_data(model_name, path_model_name):
                         result = result + "\t".join(temp_result) + "\n"
                         temp_result = new_temp_result
                         new_temp_result = ["\t" for i in range(8)]
+                        entity = ""
 
     with open(filename_result, "w", encoding="utf-8") as f:
         f.write(result)

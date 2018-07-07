@@ -11,14 +11,14 @@ test_path = "./test_data"
 
 def main_IE():
     # model_names = ["zengjianchi", "hetong", "dingzeng"]
-    model_names = ["dingzeng"]
+    model_names = ["hetong"]
     for model_name in model_names:
         #训练和验证
         path_model_name = os.path.join(path, model_name)
         maps_path =  path_model_name
         pass
         #从html文件中读取文本并进行加工处理
-        read_data(model_name, path_model_name)
+        # read_data(model_name, path_model_name)
         #用最大正向匹配进行自动标注
         # match_by_row(model_name, path_model_name)
         #将被标注的文件分割成train、dev、test三个文件
@@ -37,7 +37,7 @@ def main_IE():
         # process_data(model_name, test_path_model_name, False)
         maps_path = path_model_name   #训练时生成的字典的路径
         # main_ner(False, model_name, test_path_model_name, maps_path)
-        # output_data(model_name, test_path_model_name)
+        output_data(model_name, test_path_model_name)
 
 if __name__ == "__main__":
     main_IE()
