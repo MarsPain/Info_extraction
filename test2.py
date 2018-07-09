@@ -4,23 +4,23 @@
 # print(a[2:-2])
 
 import re
-pattern = re.compile(r"\d{4}"+"年"+r"\d{1,2}"+"月"+r"\d{1,2}"+"日")
-s = "他的生日是2016年12月12日，他在2017年8月7日去大学了集中竞价	2018年2月5日d s"
-print(re.findall(pattern,s))
-def test(matchobj):
-    #以下方法不知道为什么不再适用了
-    # print(matchobj)
-    # print(type(matchobj[0]))
-    # matchobj = re.sub("年|月", "-", matchobj[0])
-    # matchobj = re.sub("日", "", matchobj)
-    # return matchobj
-    #新的方法
-    matchobj = matchobj.group(0)
-    matchobj = re.sub("年|月", "-", matchobj)
-    matchobj = re.sub("日", "", matchobj)
-    return matchobj
-s = re.sub(pattern, test, s)
-print(s)
+# pattern = re.compile(r"\d{4}"+"年"+r"\d{1,2}"+"月"+r"\d{1,2}"+"日")
+# s = "他的生日是2016年12月12日，他在2017年8月7日去大学了集中竞价	2018年2月5日d s"
+# print(re.findall(pattern,s))
+# def test(matchobj):
+#     #以下方法不知道为什么不再适用了
+#     # print(matchobj)
+#     # print(type(matchobj[0]))
+#     # matchobj = re.sub("年|月", "-", matchobj[0])
+#     # matchobj = re.sub("日", "", matchobj)
+#     # return matchobj
+#     #新的方法
+#     matchobj = matchobj.group(0)
+#     matchobj = re.sub("年|月", "-", matchobj)
+#     matchobj = re.sub("日", "", matchobj)
+#     return matchobj
+# s = re.sub(pattern, test, s)
+# print(s)
 
 # pattern2 = re.compile(r"(\d{4}年\d{1,2}月\d{1,2}日至\d{1,2}月\d{1,2}日)")
 # s = "他的生日是2016年12月12日，他在2017年8月7日至9月10日去大学了"
@@ -217,3 +217,21 @@ print(s)
 # new_interval_list = merge(index_list)
 # for interval in new_interval_list:
 #     print(interval.start, interval.end)
+
+a = [2,1,2,0,2,3,4]
+#暴力深度搜索
+def dfs(a, result, num, count, flag):
+    if count == 4:
+        result = num if num>result else result
+        return result
+    elif a:
+        for i in range(len(a)):
+            if flag:
+                result = dfs(a[i+1:], result, num+a[i], count+1, False)
+            else:
+                result = dfs(a[i+1:], result, num-a[i], count+1, True)
+    return result
+result = -100000
+flag = True
+result = dfs(a, result, 0, 0, flag)
+print(result)

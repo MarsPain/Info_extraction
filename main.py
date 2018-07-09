@@ -91,7 +91,8 @@ def config_model(char_to_id, tag_to_id):
 
 def evaluate(sess, model, name, data, id_to_tag, logger):
     logger.info("evaluate:{}".format(name))
-    result_path = "result"
+    # result_path = "result"
+    result_path = "resultB"
     ner_results = model.evaluate(sess, data, id_to_tag)
     eval_lines = test_ner(ner_results, result_path, name)
     for line in eval_lines:

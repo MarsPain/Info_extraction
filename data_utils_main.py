@@ -159,8 +159,10 @@ def unit_norm(s):
 
 
 def output_data(model_name, path_model_name):
-    filename_predict = os.path.join("result", model_name+"_predict.utf8")
-    filename_result = os.path.join("result", model_name+".txt")
+    # filename_predict = os.path.join("result", model_name+"_predict.utf8")
+    # filename_result = os.path.join("result", model_name+".txt")
+    filename_predict = os.path.join("resultB", model_name+"_predict.utf8")
+    filename_result = os.path.join("resultB", model_name+".txt")
     if model_name == "zengjianchi":
         result = "公告id	股东全称	股东简称	变动截止日期	变动价格	变动数量	变动后持股数	变动后持股比例"
     elif model_name == "hetong":
@@ -284,7 +286,7 @@ def text_cut(s):
         index = matchobj.start()
         index = index + last_index
         # index_list.append(Interval(index, index+2)) #原始区间
-        index_list.append(Interval(index-100, index+700)) #区间膨胀
+        index_list.append(Interval(index-100, index+400)) #区间膨胀
     index_list = merge(index_list)
     new_s = ""
     for interval in index_list:
