@@ -3,12 +3,12 @@ import numpy as np
 import tensorflow as tf
 # from tensorflow.contrib.crf import crf_log_likelihood
 from tensorflow.contrib.crf import viterbi_decode
-from crf_test import crf_log_likelihood
+from ChineseNER.crf_test import crf_log_likelihood
 from tensorflow.contrib.layers.python.layers import initializers
 
-import rnncell as rnn
-from utils import result_to_json
-from data_utils import create_input, iobes_iob
+import ChineseNER.rnncell as rnn
+from ChineseNER.utils import result_to_json
+from ChineseNER.data_utils import create_input, iobes_iob
 
 
 class Model(object):

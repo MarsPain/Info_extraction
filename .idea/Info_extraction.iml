@@ -8,7 +8,7 @@
       <excludeFolder url="file://$MODULE_DIR$/test_data" />
       <excludeFolder url="file://$MODULE_DIR$/test_dataB" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.5.4 (C:\Program Files\Anaconda3\envs\NER\python.exe)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.6.2 (C:\ProgramData\Anaconda3\envs\IE\python.exe)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TestRunnerService">

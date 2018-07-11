@@ -6,13 +6,13 @@ import itertools
 from collections import OrderedDict
 import tensorflow as tf
 import numpy as np
-from model import Model
-from loader import load_sentences, update_tag_scheme
-from loader import char_mapping, tag_mapping
-from loader import augment_with_pretrained, prepare_dataset
-from utils import get_logger, make_path, clean, create_model, save_model
-from utils import print_config, save_config, load_config, test_ner
-from data_utils import load_word2vec, create_input, input_from_line, BatchManager
+from ChineseNER.model import Model
+from ChineseNER.loader import load_sentences, update_tag_scheme
+from ChineseNER.loader import char_mapping, tag_mapping
+from ChineseNER.loader import augment_with_pretrained, prepare_dataset
+from ChineseNER.utils import get_logger, make_path, clean, create_model, save_model
+from ChineseNER.utils import print_config, save_config, load_config, test_ner
+from ChineseNER.data_utils import load_word2vec, create_input, input_from_line, BatchManager
 
 flags = tf.app.flags
 #若要训练则将clean和train设置为True
@@ -91,8 +91,8 @@ def config_model(char_to_id, tag_to_id):
 
 def evaluate(sess, model, name, data, id_to_tag, logger):
     logger.info("evaluate:{}".format(name))
-    # result_path = "result"
-    result_path = "resultB"
+    result_path = "result"
+    # result_path = "resultB"
     ner_results = model.evaluate(sess, data, id_to_tag)
     eval_lines = test_ner(ner_results, result_path, name)
     for line in eval_lines:
