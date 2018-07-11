@@ -7,9 +7,10 @@
 
 1. ChineseNER：中文NER模型代码；
 2. config: 解析html表格数据的json配置文件；
-3. docparser： 对文档进行解析
-4. extract: 基于docparser解析后的结果进行信息抽取
-5. ltp_data_v3.4:ltp模型
-6. ner:命名实体识别工具
-7. result:信息抽取结果
-8. test_data：测试数据
+3. data：训练集；
+4. docparser： 对文档进行解析
+5. extract: 基于docparser解析后的结果进行信息抽取
+6. ltp_data_v3.4:ltp模型
+7. ner:命名实体识别工具
+8. result:信息抽取结果
+9. test_data：测试数据
