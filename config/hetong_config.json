@@ -1,0 +1,42 @@
+{
+  "table_dict": {
+    "fields": [
+      {
+        "fieldName": "shareholderFullName",
+        "convertMethod": "getStringFromText",
+        "pattern": "对方|招标",
+        "colSkipPattern": "受让人",
+        "rowSkipPattern": "合计|小计|总计|共计"
+      },
+      {
+        "fieldName": "finishDate",
+        "convertMethod": "getDateFromText",
+        "pattern": "主体|中标单位",
+        "rowSkipPattern": "合计|小计|总计|共计"
+      },
+      {
+        "fieldName": "sharePrice",
+        "convertMethod": "getDecimalRangeFromTableText",
+        "pattern": "内容|项目名称|中标项目",
+        "rowSkipPattern": "合计|小计|总计|共计"
+      },
+      {
+        "fieldName": "shareNum",
+        "convertMethod": "getLongFromText",
+        "pattern": "金额|合同额",
+        "colSkipPattern": "前|后|性质|比例|价格|均价"
+      },
+      {
+        "fieldName": "shareNumAfterChg",
+        "convertMethod": "getLongFromText",
+        "pattern": "后.*[数量|股份|股数]",
+        "colSkipPattern": "比例|占"
+      },
+      {
+        "fieldName": "sharePcntAfterChg",
+        "convertMethod": "getDecimalFromText",
+        "pattern": "后.*比例"
+      }
+    ]
+  }
+}
