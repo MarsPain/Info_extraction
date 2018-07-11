@@ -13,7 +13,7 @@ test_path = "./test_dataB"
 
 def main_IE():
     # model_names = ["hetong", "dingzeng"]
-    model_names = ["hetong"]
+    model_names = ["hetong", "dingzeng"]
     for model_name in model_names:
         #训练和验证
         path_model_name = os.path.join(path, model_name)
@@ -25,7 +25,7 @@ def main_IE():
         # match_by_row(model_name, path_model_name)
         #将被标注的文件分割成train、dev、test三个文件
         # process_data(model_name, path_model_name, True)
-        #对训练集进行训练
+        #对训练集进行训练，得到命名实体识别模型
         #若导入了已训练好的模型参数，需要删除data_train中的字典maps_pkl并重新生成，否则可能出现标签种类数量（tensor）无法对齐的问题
         #若要重新训练，则需要删除model_ckpt下面已经保存好的相应模型参数
         # main_ner(True, model_name, path_model_name, maps_path)

@@ -24,3 +24,6 @@
 
 2018-07-11 22:19:51,560 - train.log - INFO -                 7: precision:   0.00%; recall:   0.00%; FB1:   0.00  1
 
+2018-07-11 23:34:28,423 - train.log - INFO - Reading model parameters from model_ckpt/hetong_ckpt\ner.ckpt
+2018-07-11 23:34:29,853 - train.log - INFO - evaluate:hetong
+2018-07-11 23:35:22,916 - train.log - INFO - Reading model parameters from model_ckpt/dingzeng_ckpt\ner.ckpt
