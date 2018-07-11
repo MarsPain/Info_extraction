@@ -44,5 +44,5 @@ def main_IE():
         output_data(model_name, test_path_model_name)
 
 if __name__ == "__main__":
-    main_IE()   #对hetong和dingzeng数据进行信息抽取
     main_app()  #对zengjianchi数据进行信息抽取
+    main_IE()   #对hetong和dingzeng数据进行信息抽取
