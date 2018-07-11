@@ -218,20 +218,41 @@ import re
 # for interval in new_interval_list:
 #     print(interval.start, interval.end)
 
-a = [2,1,2,0,2,3,4]
-#暴力深度搜索
-def dfs(a, result, num, count, flag):
-    if count == 4:
-        result = num if num>result else result
-        return result
-    elif a:
-        for i in range(len(a)):
-            if flag:
-                result = dfs(a[i+1:], result, num+a[i], count+1, False)
-            else:
-                result = dfs(a[i+1:], result, num-a[i], count+1, True)
-    return result
-result = -100000
-flag = True
-result = dfs(a, result, 0, 0, flag)
-print(result)
+# a = [2,1,2,0,2,3,4]
+# #暴力深度搜索
+# def dfs(a, result, num, count, flag):
+#     if count == 4:
+#         result = num if num>result else result
+#         return result
+#     elif a:
+#         for i in range(len(a)):
+#             if flag:
+#                 result = dfs(a[i+1:], result, num+a[i], count+1, False)
+#             else:
+#                 result = dfs(a[i+1:], result, num-a[i], count+1, True)
+#     return result
+# result = -100000
+# flag = True
+# result = dfs(a, result, 0, 0, flag)
+# print(result)
+
+# a = [2,1,5,3,2,7,6,0]
+# def quick_sort(a, left, right):
+#     i = left; j = right
+#     if i>=j:
+#         return a
+#     key = a[i]
+#     while i<j:
+#         while i<j and a[j]>=key:
+#             j -= 1
+#         a[i] = a[j]
+#         while i<j and a[i]<=key:
+#             i += 1
+#         a[j] = a[i]
+#     a[i] = key
+#     quick_sort(a, left, i-1)
+#     quick_sort(a, j+1, right)
+#     return a
+# left = 0; right = len(a)-1
+# a = quick_sort(a, left, right)
+# print(a)

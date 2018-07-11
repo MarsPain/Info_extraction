@@ -1,2 +1,26 @@
 2018-07-11 17:24:56,420 - train.log - INFO - Reading model parameters from model_ckpt/zengjianchi_ckpt\ner.ckpt
 2018-07-11 17:24:56,628 - train.log - INFO - evaluate:zengjianchi
+2018-07-11 21:32:17,926 - train.log - INFO - Reading model parameters from model_ckpt/dingzeng_ckpt\ner.ckpt
+2018-07-11 21:35:44,138 - train.log - INFO - Reading model parameters from model_ckpt/dingzeng_ckpt\ner.ckpt
+2018-07-11 21:35:44,563 - train.log - INFO - evaluate:dingzeng
+2018-07-11 22:12:24,900 - train.log - INFO - Reading model parameters from model_ckpt/hetong_ckpt\ner.ckpt
+2018-07-11 22:13:54,287 - train.log - INFO - Reading model parameters from model_ckpt/hetong_ckpt\ner.ckpt
+2018-07-11 22:13:54,705 - train.log - INFO - evaluate:hetong
+2018-07-11 22:19:51,560 - train.log - INFO - processed 996643 tokens with 0 phrases; found: 3456 phrases; correct: 0.
+
+2018-07-11 22:19:51,560 - train.log - INFO - accuracy:  95.95%; precision:   0.00%; recall:   0.00%; FB1:   0.00
+
+2018-07-11 22:19:51,560 - train.log - INFO -                 1: precision:   0.00%; recall:   0.00%; FB1:   0.00  908
+
+2018-07-11 22:19:51,560 - train.log - INFO -                 2: precision:   0.00%; recall:   0.00%; FB1:   0.00  702
+
+2018-07-11 22:19:51,560 - train.log - INFO -                 3: precision:   0.00%; recall:   0.00%; FB1:   0.00  907
+
+2018-07-11 22:19:51,560 - train.log - INFO -                 4: precision:   0.00%; recall:   0.00%; FB1:   0.00  206
+
+2018-07-11 22:19:51,560 - train.log - INFO -                 5: precision:   0.00%; recall:   0.00%; FB1:   0.00  242
+
+2018-07-11 22:19:51,560 - train.log - INFO -                 6: precision:   0.00%; recall:   0.00%; FB1:   0.00  490
+
+2018-07-11 22:19:51,560 - train.log - INFO -                 7: precision:   0.00%; recall:   0.00%; FB1:   0.00  1
+

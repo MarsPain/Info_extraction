@@ -159,10 +159,10 @@ def unit_norm(s):
 
 
 def output_data(model_name, path_model_name):
-    filename_predict = os.path.join("result", model_name+"_predict.utf8")
-    filename_result = os.path.join("result", model_name+".txt")
-    # filename_predict = os.path.join("resultB", model_name+"_predict.utf8")
-    # filename_result = os.path.join("resultB", model_name+".txt")
+    # filename_predict = os.path.join("result", model_name+"_predict.utf8")
+    # filename_result = os.path.join("result", model_name+".txt")
+    filename_predict = os.path.join("resultB", model_name+"_predict.utf8")
+    filename_result = os.path.join("resultB", model_name+".txt")
     if model_name == "zengjianchi":
         result = "公告id	股东全称	股东简称	变动截止日期	变动价格	变动数量	变动后持股数	变动后持股比例"
     elif model_name == "hetong":
